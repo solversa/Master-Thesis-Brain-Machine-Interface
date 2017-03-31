@@ -4,7 +4,7 @@
 
 ### Outline:
 #### Step 1: SNN for Iris data set
-Implementing a spiking neural network (SNN) with an Spike-Time-Dependent Plasticity  (STDP) learning algorithm to classify a binary version of the iris data set. 
+Implementing a spiking neural network (SNN) with a Spike-Time-Dependent Plasticity  (STDP) learning algorithm to classify a binary version of the iris data set. 
 Since the Iris data set is proven to be easy to classify we can check if our implementation of the SNN and STDP works. 
 
 Current State:
