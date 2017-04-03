@@ -3,7 +3,7 @@
 ## Task: Decoding of 3D Imaginary Reach and Grasp Movements from Non-invasive EEG Signals using Spiking Neural Networks on SpiNNaker Neuromorphic Hardware
 
 For the task of decoding the EEG signals a generic multivariate classifier based on a spiking neural network model abstracted from the insect olafactory system (particular the antenna lobe AL) is used.
-The model in this work is solely trained and used on the SpiNNaker neuromorphic platform which restricts the implementation of the STDP algorithm used for learning [http://apt.cs.manchester.ac.uk/projects/SpiNNaker/]
+The model in this work is solely trained and used on the SpiNNaker neuromorphic platform which restricts the implementation of the STDP algorithm used for learning [http://apt.cs.manchester.ac.uk/projects/SpiNNaker/].
 
 ![alt tag](http://www.frontiersin.org/files/Articles/164125/fnins-09-00491-HTML/image_m/fnins-09-00491-g001.jpg)
 
@@ -14,7 +14,7 @@ The model in this work is solely trained and used on the SpiNNaker neuromorphic 
 Implementing a spiking neural network (SNN) with a Spike-Time-Dependent Plasticity  (STDP) learning algorithm to classify a binary version of the iris data set. 
 Since the Iris data set is proven to be easy to classify we can check if our implementation of the SNN and STDP works. 
 
-Current State:
+Current State (2017/04/01):
 Approximately 90% classification rate (parameters are not finally tuned)
 
 #### Step 2: EEG Feature Extraction
