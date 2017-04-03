@@ -19,7 +19,8 @@ freq_s     = 250.    # Sampling Frequency
 raw_fname = 'exp_1-raw.fif'
 epo_fname = 'exp_1-epo.fif'
 #raw = mne.io.read_raw_fif(raw_fname).load_data()
-epo = mne.read_epochs(epo_fname).get_data()
+epochs = mne.read_epochs(epo_fname)
+epo_arr = epochs.get_data()
 
 
 #
@@ -38,9 +39,9 @@ epo = mne.read_epochs(epo_fname).get_data()
 #
 # Processing
 #
-n_epo = epo.shape[0]
-n_chan = epo.shape[1]
-n_smpl = epo.shape[2]
+n_epo = epo_arr.shape[0]
+n_chan = epo_arr.shape[1]
+n_smpl = epo_arr.shape[2]
 
 ### Create new epochs array with bandpassed frequencies
 # (n_epochs, n_channels, n_subchannels, n_samples)
@@ -51,7 +52,7 @@ if 0:
 	# new epochs array: (n_epochs, n_channels, n_subchannels, n_samples)
 	epo_filtered = np.zeros((n_epo, n_chan, len(frq_bnds), n_smpl))
 	# bandpass filter all channels in each epoch:
-	for e, epoch in enumerate(epo):    # for all epochs
+	for e, epoch in enumerate(epo_arr):    # for all epochs
 		print('\n\n\nEPOCH {} of {} \n\n\n'.format(e, n_epo))
 		for c, channel in enumerate(epoch): # for all channels
 			for sub_c, freq_range in enumerate(frq_bnds):    # for all sub channels
@@ -59,6 +60,8 @@ if 0:
 													x=channel, Fs=freq_s, 
 													Fp1=freq_range[0], 
 													Fp2=freq_range[1])
+	# Save as epochs again
+	#epochs = mne.EpochsArray(data=epochs_data[0], info=info[0], events=events[0])
 	np.save('epo_filtered.npy', epo_filtered)
 
 ### Calculate Power of all subbands
@@ -66,6 +69,9 @@ if 1:
 	epo_filtered = np.load('epo_filtered.npy')
 
 if 1:
+	# create new epochs
+
+	# band power
 	n_cycles = 2  # number of cycles in Morlet wavelet
 	freqs = np.arange(7, 30, 3)  # frequencies of interest
 	from mne.time_frequency import tfr_morlet  # noqa

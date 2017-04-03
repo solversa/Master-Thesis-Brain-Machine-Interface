@@ -6,7 +6,7 @@ import mne
 #
 # Load Data
 #
-data_path = "/Users/leonardrychly/Dropbox/[TUM]/4. WiSe 1617/Masterarbeit/code/eeg_preprocessing/B01T.mat"
+data_path = "/Users/leonardrychly/Dropbox/[TUM]/4. WiSe 1617/Masterarbeit/Code/eeg_feature_extraction/B01T.mat"
 mat = scipy.io.loadmat(data_path)['data']	
 
 # Separate experiments in .mat file
@@ -60,15 +60,10 @@ exp_dict[2] = {'X': 			exp_arr[2][0][0][0].T,
 
 
 ### Remove Artifacts
+artifact_idx = exp_dict[0]['artifacts'].nonzero()[0]
 # from trials
-trials_w_artf_idx = exp_dict[0]['artifacts'].nonzero()[0]
-trials_w_artf = exp_dict[0]['trial'][trials_w_artf_idx]
-
-
-# from y
-
-
-# delete epochs containing artifacts
+exp_dict[0]['trial'] = np.delete(exp_dict[0]['trial'], artifact_idx)
+exp_dict[0]['y'] = np.delete(exp_dict[0]['y'], artifact_idx)
 
 
 #
@@ -77,19 +72,19 @@ trials_w_artf = exp_dict[0]['trial'][trials_w_artf_idx]
 
 ### MNE Info Object
 info = [[] for _ in range(mat.shape[1])]
-info[0] = mne.create_info(ch_names	  = ['1', '2', '3', '4', '5', '6'],
+info[0] = mne.create_info(ch_names	  = ['eeg_1', 'eeg_2', 'eeg_3', 'eog_4', 'eog_5', 'eog_6'],
 						  ch_types 	  = ['eeg','eeg','eeg','eog','eog','eog'],
 						  sfreq 		  = exp_dict[0]['fs'],
 #					      subject_info = {'gender': exp0_dict['gender'],
 #					     				  'age':    exp0_dict['age']}
 						 )
-info[1] = mne.create_info(ch_names	  = ['1', '2', '3', '4', '5', '6'],
+info[1] = mne.create_info(ch_names	  = ['eeg_1', 'eeg_2', 'eeg_3', 'eog_4', 'eog_5', 'eog_6'],
 						  ch_types 	  = ['eeg','eeg','eeg','eog','eog','eog'],
 						  sfreq 		  = exp_dict[1]['fs']
 #					      subject_info = {'gender': exp1_dict['gender'],
 #					   					  'age':    exp1_dict['age']}
 					   	 )
-info[2] = mne.create_info(ch_names	  = ['1', '2', '3', '4', '5', '6'],
+info[2] = mne.create_info(ch_names	  = ['eeg_1', 'eeg_2', 'eeg_3', 'eog_4', 'eog_5', 'eog_6'],
 						 ch_types 	  = ['eeg','eeg','eeg','eog','eog','eog'],
 					     sfreq 		  = exp_dict[2]['fs']
 #					     subject_info = {'gender': exp2_dict['gender'],
@@ -169,15 +164,15 @@ if 0:
 #
 # raw
 if 0:
-	raw[0].save('exp_0-raw.fif')
-	raw[1].save('exp_1-raw.fif')
-	raw[2].save('exp_2-raw.fif')
+	raw[0].save('exp_0-raw.fif', overwrite=True)
+	raw[1].save('exp_1-raw.fif', overwrite=True)
+	raw[2].save('exp_2-raw.fif', overwrite=True)
 
 # epoch_array
 if 0:
-	epochs[0].save('exp_0-epo.fif')
-	epochs[1].save('exp_1-epo.fif')
-	epochs[2].save('exp_2-epo.fif')
+	epochs[0].save('exp_0-epo.fif', overwrite=True)
+	epochs[1].save('exp_1-epo.fif', overwrite=True)
+	epochs[2].save('exp_2-epo.fif', overwrite=True)
 
 
 
