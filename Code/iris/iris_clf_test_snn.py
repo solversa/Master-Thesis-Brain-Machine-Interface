@@ -64,11 +64,11 @@ def test_snn():
     ## Parameters
     ###############################################################################
     # Load Parameter
-    parameters = np.load("parameters1.npy")
+    parameters = np.load("output_files/parameters1.npy")
     parameters = parameters.item()
     # Load data
-    data = np.load('X_test_const.npy')
-    cls = np.load("y_test_const.npy")
+    data = np.load('output_files/X_test_const.npy')
+    cls = np.load("output_files/y_test_const.npy")
     # Simulation Parameters
 
     trial_num       = parameters["trial_num"] # How many samples (trials) from data will be presented 
@@ -97,7 +97,7 @@ def test_snn():
     wei_noise_poi = parameters["wei_noise_poi"]
 
     # Delays
-    del_src_enc   = np.load("parameters2.npy")
+    del_src_enc   = np.load("output_files/parameters2.npy")
     del_enc_filt  = parameters["del_enc_filt"]
     del_init_stdp = parameters["del_init_stdp"]
     del_cls_exc   = parameters["del_cls_exc"]
@@ -248,25 +248,25 @@ def test_snn():
 
 
     ## Connection List from Spike Source Array to Encoding Layer
-    conn_inp_enc = np.load("conn_inp_enc.npy")
+    conn_inp_enc = np.load("output_files/conn_inp_enc.npy")
 
     #Connection List for Filtering Layer Inhibitory
-    conn_filt_inh = np.load("conn_filt_inh.npy")
+    conn_filt_inh = np.load("output_files/conn_filt_inh.npy")
 
     ## STDP Connection List
-    conn_stdp_list = np.load("conn_stdp_list.npy")
-    diff_ind = np.load("diff_ind_filt.npy")
-    diff_ind2 = np.load("diff_ind_filt2.npy")
-    diff_thr2 = np.load("diff_thr2.npy")
+    conn_stdp_list = np.load("output_files/conn_stdp_list.npy")
+    diff_ind = np.load("output_files/diff_ind_filt.npy")
+    diff_ind2 = np.load("output_files/diff_ind_filt2.npy")
+    diff_thr2 = np.load("output_files/diff_thr2.npy")
     c1 = 0
     for cls_list in conn_stdp_list:
         c2 = 0
-        cls_wei = np.load("stdp_weights{}.npy".format(c1))
+        cls_wei = np.load("output_files/stdp_weights{}.npy".format(c1))
         mx = max(cls_wei)
         for conn in cls_list:
     #        if ismember(diff_ind,conn[0]):
             if (ismember(diff_ind2,conn[0]) and 
-                    np.sign(c1-0.5) * np.sign(diff_thr2[conn[0]]) == -1.):
+                    np.sign(c1-0.5) * np.sign(diff_thr2[int(conn[0])]) == -1.):
     #            conn[2]=0.08*cls_wei[c2]/mx
                conn[2] = 0.08#*diff_thr2[conn[0]]/36.
     #        conn[2]=2.*cls_wei[c2]
@@ -277,7 +277,7 @@ def test_snn():
 
     ## Output Layer Inhibitory Connection List
 
-    conn_output_inh = np.load("conn_output_inh.npy")
+    conn_output_inh = np.load("output_files/conn_output_inh.npy")
 
 
     ## Spike Source to Encoding Layer
@@ -477,10 +477,10 @@ def test_snn():
         pylab.figure()
         cf = 0.1
         pylab.hold(True)
-        cls_wei0 = np.load("stdp_weights{}.npy".format(0))
+        cls_wei0 = np.load("output_files/stdp_weights{}.npy".format(0))
         mx = max(cls_wei0)
         cls_wei0 = cf * cls_wei0 / mx
-        cls_wei1 = np.load("stdp_weights{}.npy".format(1))
+        cls_wei1 = np.load("output_files/stdp_weights{}.npy".format(1))
         mx = max(cls_wei1)
         cls_wei1 = cf * cls_wei1/ mx
         l = min(len(cls_wei0), len(cls_wei1))

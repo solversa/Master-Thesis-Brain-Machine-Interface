@@ -128,10 +128,11 @@ def train_snn():
                             np.vstack((c0_idx_list[0][:test_num_c0],
                                        c1_idx_list[0][:test_num_c1]))) 
         # save training and test set
-        np.save('X_train.npy', X_train)
-        np.save('y_train.npy', y_train)
-        np.save('X_test.npy', X_test)
-        np.save('y_test.npy', y_test.reshape(1, len(y_test)).flatten())
+        np.save('output_files/X_train.npy', X_train)
+        np.save('output_files/y_train.npy', y_train)
+        np.save('output_files/X_test.npy', X_test)
+        np.save('output_files/y_test.npy', y_test.reshape(1, len(y_test))\
+                                                 .flatten())
         # return train set
         return X_train, y_train
 
@@ -168,8 +169,14 @@ def train_snn():
     wei_noise_poi   = 0.02
 
     # Delays
-    del_src_enc     = [int(np.random.randint(n_pop)+1) 
-                            for i in range(n_feature*n_pop)] 
+    if 0:    # if True:  calculate "del_src_enc" (randomly) new
+             # uf False: load previously saved "del_src_enc"
+        del_src_enc = [int(np.random.randint(n_pop)+1) 
+                           for i in range(n_feature*n_pop)]
+        np.save("output_files/del_src_enc.npy", del_src_enc)
+    else:
+        del_src_enc = np.load("output_files/del_src_enc.npy")
+
     del_enc_filt    = ts
     del_filt_inh    = ts
     del_init_stdp   = 1.
@@ -179,7 +186,7 @@ def train_snn():
     del_noise_poi   = 1.
 
     # Firing Rates
-    noise_poi_rate  = 5. 
+    noise_poi_rate  = 10. 
     max_fr_input    = 100.   # maximum firing rate at the input layer
     max_fr_rate_output = 20. # Maximum firing rate at output (supervisory signal)
 
@@ -187,7 +194,7 @@ def train_snn():
     prob_filt_inh   = .4 # Prob of connectivity inhibitory connections at FilT_Layer
     prob_stdp       = 1. # Prob of STDP connections
     prob_output_inh = .7 # Prob of inhibitory connections at Output Layer
-    prob_noise_poi_conn = 0.
+    prob_noise_poi_conn = 0.02
 
     ## STDP Parameters
     tau_pl      = 0.2           # (0.2 - 0.3 works)
@@ -220,8 +227,8 @@ def train_snn():
 
     # Load feature matrix
     #data, cls = get_data(trial_num)
-    data = np.load('X_train_const.npy')
-    cls = np.load('y_train_const.npy')
+    data = np.load('output_files/X_train_const.npy')
+    cls = np.load('output_files/y_train_const.npy')
 
     r,c = np.shape(data)
 
@@ -276,8 +283,8 @@ def train_snn():
         }
 
     if save == True:
-        np.save("parameters1",parameter_dict)
-        np.save("parameters2",del_src_enc)
+        np.save("output_files/parameters1",parameter_dict)
+        np.save("output_files/parameters2",del_src_enc)
 
     ###############################################################################
     ## Create populations for different layers
@@ -301,6 +308,14 @@ def train_snn():
             for t in times:
                 spike_times[j].append(t)
 
+    if 0:    # if True:  calculate "spike_times" (randomly) new
+             # uf False: load previously saved "spike_times"
+        np.save('output_files/spike_times.npy', spike_times)
+    else:
+        spike_times = np.load('output_files/spike_times.npy')
+
+
+
     # Calculate spike times at the output (as supervisory signal)
     out_spike_times=[[] for i in range(n_cl)]
     for i in range(n_trials):
@@ -311,6 +326,13 @@ def train_snn():
                              np.random.randint(100))
         for t in times:
                 out_spike_times[int(ind)].append(t)
+
+    if 0:    # if True:  calculate "out_spike_times" (randomly) new
+             # uf False: load previously saved "out_spike_times"
+        np.save('output_files/out_spike_times.npy', out_spike_times)
+    else:
+        out_spike_times = np.load('output_files/out_spike_times.npy')
+
 
     # Spike source of input layer
     spike_source=p.Population(n_feature, 
@@ -346,9 +368,11 @@ def train_snn():
         out_layer_exc[i].record()
 
     # Noisy poisson population at the input
-    poisson_input = p.Population(n_pop*2, 
+
+    poisson_input = p.Population(n_pop * 2, 
                                  p.SpikeSourcePoisson,
                                  {"rate":noise_poi_rate})
+
 
     # Record Spikes
     enc_layer.record()
@@ -370,54 +394,68 @@ def train_snn():
             conn_inp_enc.append([i,ind+j,wei_src_enc,del_src_enc[ind+j]])
 
     if save == True:
-        np.save("conn_inp_enc",conn_inp_enc)
+        np.save("output_files/conn_inp_enc",conn_inp_enc)
 
-    #Connection List for Filtering Layer Inhibitory
-    conn_filt_inh=[]
-    for i in range(n_feature):
-        rng1=i*n_pop
-        rng2=rng1+n_pop
-        inp=range(rng1,rng2)
-        outp=range(0,rng1)+range(rng2,n_feature*n_pop)
-        for ii in inp:
-            for jj in outp:
-                if prob_filt_inh>np.random.rand():
-                    conn_filt_inh.append([ii,jj,wei_filt_inh,del_filt_inh])
+    ## Connection List for Filtering Layer Inhibitory
+    if 0:    # if True:  calculate conn_filt_inh (randomly) new
+             # uf False: load previously saved conn_filt_inh
+        conn_filt_inh=[]
+        for i in range(n_feature):
+            rng1=i*n_pop
+            rng2=rng1+n_pop
+            inp=range(rng1,rng2)
+            outp=range(0,rng1)+range(rng2,n_feature*n_pop)
+            for ii in inp:
+                for jj in outp:
+                    if prob_filt_inh>np.random.rand():
+                        conn_filt_inh.append([ii,jj,wei_filt_inh,del_filt_inh])
+        if save == True:
+            np.save('output_files/conn_filt_inh.npy', conn_filt_inh)
+    else:
+        conn_filt_inh = np.load('output_files/conn_filt_inh.npy')
 
-    if save == True:
-        np.save("conn_filt_inh",conn_filt_inh)
-
+    
     ## STDP Connection List
-    conn_stdp_list=[[] for i in range(n_cl)]
-    for i in range(n_cl): # For each population at output layer
-        for ii in range(n_pop * n_feature): # For each neuron in filtering layer
-            for jj in range(n_pop): # For each neuron in each population of output layer
-                if prob_stdp > np.random.rand(): # If the prob of connection is satiesfied
-                    # Make the connection
-                    conn_stdp_list[i].append([ii,
-                                              jj, 
-                                              wei_init_stdp, 
-                                              del_init_stdp]) 
+    if 0:    # if True:  calculate conn_stdp_list (randomly) new
+             # uf False: load previously saved conn_stdp_list
+        conn_stdp_list=[[] for i in range(n_cl)]
+        for i in range(n_cl): # For each population at output layer
+            for ii in range(n_pop * n_feature): # For each neuron in filtering layer
+                for jj in range(n_pop): # For each neuron in each population of output layer
+                    if prob_stdp > np.random.rand(): # If the prob of connection is satiesfied
+                        # Make the connection
+                        conn_stdp_list[i].append([ii,
+                                                  jj, 
+                                                  wei_init_stdp, 
+                                                  del_init_stdp]) 
+        if save == True:
+            np.save('output_files/conn_stdp_list.npy', conn_stdp_list)
+    else:
+        conn_stdp_list = np.load('output_files/conn_stdp_list.npy')
 
-    if save == True:
-        np.save("conn_stdp_list",conn_stdp_list)
-
+    
     ## Output Layer Inhibitory Connection List
-    conn_output_inh = [[] for i in range(n_cl) for j in range(n_cl) if i!=j]
-    c = 0
-    for i in range(n_cl):
-        for j in range(n_cl):
-            if i != j:
-                for ii in range(n_pop):
-                    for jj in range(n_pop):
-                        if prob_output_inh > np.random.rand():
-                            conn_output_inh[c].append([ii,
-                                                       jj,
-                                                       wei_cls_inh,
-                                                       del_cls_inh])
-                c+=1
-    if save == True:
-        np.save("conn_output_inh",conn_output_inh)
+    if 0:    # if True:  calculate conn_stdp_list (randomly) new
+             # uf False: load previously saved conn_stdp_list
+        conn_output_inh = [[] for i in range(n_cl) for j in range(n_cl) if i!=j]
+        c = 0
+        for i in range(n_cl):
+            for j in range(n_cl):
+                if i != j:
+                    for ii in range(n_pop):
+                        for jj in range(n_pop):
+                            if prob_output_inh > np.random.rand():
+                                conn_output_inh[c].append([ii,
+                                                           jj,
+                                                           wei_cls_inh,
+                                                           del_cls_inh])
+                    c += 1
+        if save == True:
+            np.save("output_files/conn_output_inh.npy",conn_output_inh) 
+    else:
+        conn_output_inh = np.load("output_files/conn_output_inh.npy")
+
+    
 
     ## Spike Source to Encoding Layer
     p.Projection(spike_source, enc_layer,
@@ -481,10 +519,10 @@ def train_snn():
     #        (weights=wei_source_outp, delays=del_source_outp),target="inhibitory")
 
     ## Noisy poisson connection to encoding layer
-    p.Projection(poisson_input, enc_layer, 
-                 p.FixedProbabilityConnector(p_connect=prob_noise_poi_conn, 
-                                             weights=wei_noise_poi, 
-                                             delays=del_noise_poi))
+#    p.Projection(poisson_input, enc_layer, 
+#                 p.FixedProbabilityConnector(p_connect=prob_noise_poi_conn, 
+#                                             weights=wei_noise_poi, 
+#                                             delays=del_noise_poi))
             
     ###############################################################################
     ## Simulation
@@ -502,7 +540,7 @@ def train_snn():
     for i in range(n_cl):
         ww = stdp_proj[i].getWeights()
         if save == True:
-            np.save("stdp_weights{}".format(i),ww)
+            np.save("output_files/stdp_weights{}".format(i),ww)
         wei.append(ww)
 
     p.end()
@@ -628,14 +666,14 @@ def train_snn():
     diff_thr=[i if i>thr else 0. for i in diff_vec]
     diff_ind=[i for i in range(len(diff_thr)) if diff_thr[i]!=0]
     if save == True:
-        np.save("diff_ind_filt",diff_ind)
+        np.save("output_files/diff_ind_filt",diff_ind)
 
     diff2 = a4 - b4
     diff_thr2=[i if i > thr or i <- thr else 0. for i in diff2]
     diff_ind2=[i for i in range(len(diff_thr2)) if diff_thr2[i] != 0]
     if save == True:
-        np.save("diff_ind_filt2",diff_ind2)
-        np.save("diff_thr2",diff_thr2)
+        np.save("output_files/diff_ind_filt2",diff_ind2)
+        np.save("output_files/diff_thr2",diff_thr2)
 
     ## Plot 6: Total Spiking Activity of Neurons at Decomposition Layer for Each Class
     if 0:
