@@ -168,7 +168,8 @@ def train_snn():
     wei_noise_poi   = 0.02
 
     # Delays
-    del_src_enc     = [int(np.random.randint(n_pop)+1) for i in range(n_feature*n_pop)] 
+    del_src_enc     = [int(np.random.randint(n_pop)+1) 
+                            for i in range(n_feature*n_pop)] 
     del_enc_filt    = ts
     del_filt_inh    = ts
     del_init_stdp   = 1.
@@ -178,7 +179,7 @@ def train_snn():
     del_noise_poi   = 1.
 
     # Firing Rates
-    noise_poi_rate  = 10. 
+    noise_poi_rate  = 5. 
     max_fr_input    = 100.   # maximum firing rate at the input layer
     max_fr_rate_output = 20. # Maximum firing rate at output (supervisory signal)
 
@@ -186,7 +187,7 @@ def train_snn():
     prob_filt_inh   = .4 # Prob of connectivity inhibitory connections at FilT_Layer
     prob_stdp       = 1. # Prob of STDP connections
     prob_output_inh = .7 # Prob of inhibitory connections at Output Layer
-    prob_noise_poi_conn = 0.02
+    prob_noise_poi_conn = 0.
 
     ## STDP Parameters
     tau_pl      = 0.2           # (0.2 - 0.3 works)
@@ -237,7 +238,8 @@ def train_snn():
     dd2 = dd2 / max(dd2) * 2
     new_data_rates = []
     for r in dd2:
-        new_data_rates += calc_pop_code(r, 0., scale_data, n_feature / (n_pop + 0.0))
+        new_data_rates += calc_pop_code(r, 0., scale_data, n_feature /
+                                        (n_pop + 0.0))
     data_rates = list(max_fr_input*np.array(new_data_rates))
 
     ## Extract Class Data
@@ -262,7 +264,8 @@ def train_snn():
         "del_init_stdp":del_init_stdp, "del_cls_exc":del_cls_exc,
         "del_cls_inh":del_cls_inh, "trial_num":trial_num,
         "time_int_trials":time_int_trials, "scale_data":scale_data,
-        "ts":ts,"max_fr_input":max_fr_input, "max_fr_rate_output":max_fr_rate_output,
+        "ts":ts,"max_fr_input":max_fr_input, 
+        "max_fr_rate_output":max_fr_rate_output,
         "noise_poi_rate":noise_poi_rate, "max_fr_input":max_fr_input,
         "max_fr_rate_output":max_fr_rate_output, "prob_filt_inh":prob_filt_inh,
         "prob_stdp":prob_stdp, "prob_output_inh":prob_output_inh,
@@ -293,7 +296,8 @@ def train_snn():
         t_end = t_st + time_int_trials
         ind = i * n_feature
         for j in range(n_feature):
-            times = PoissonTimes(t_st, t_end, poi_rate[ind+j], np.random.randint(100))
+            times = PoissonTimes(t_st, t_end, poi_rate[ind+j], 
+                                 np.random.randint(100))
             for t in times:
                 spike_times[j].append(t)
 
@@ -303,12 +307,15 @@ def train_snn():
         t_st = i * time_int_trials
         t_end = t_st + time_int_trials
         ind = outputs[i]
-        times = PoissonTimes(t_st, t_end, max_fr_rate_output, np.random.randint(100))
+        times = PoissonTimes(t_st, t_end, max_fr_rate_output, 
+                             np.random.randint(100))
         for t in times:
                 out_spike_times[int(ind)].append(t)
 
     # Spike source of input layer
-    spike_source=p.Population(n_feature, p.SpikeSourceArray,{'spike_times':spike_times},
+    spike_source=p.Population(n_feature, 
+                              p.SpikeSourceArray,
+                              {'spike_times':spike_times},
                               label='spike_source')
 
     # Spike source of output layer (Supervisory signal)
@@ -317,21 +324,31 @@ def train_snn():
             {'spike_times':[out_spike_times[i]]}, label='out_spike_source'))
 
     # Encoding layer and Filtering Layer definitions
-    enc_layer = p.Population(n_feature * n_pop, p.IF_curr_exp,
-                             cell_params_lif, label='enc_layer')
-    filt_layer = p.Population(n_feature * n_pop, p.IF_curr_exp, 
-                              cell_params_lif, label='filt_layer')
+    enc_layer = p.Population(n_feature * n_pop, 
+                             p.IF_curr_exp,
+                             cell_params_lif, 
+                             label='enc_layer')
+    filt_layer = p.Population(n_feature * n_pop, 
+                              p.IF_curr_exp, 
+                              cell_params_lif, 
+                              label='filt_layer')
 
     # Excitatory and Inhibitory population definitions at the output
     for i in range(n_cl):    
-        out_layer_exc.append(p.Population(n_pop, p.IF_curr_exp, cell_params_lif,
+        out_layer_exc.append(p.Population(n_pop, 
+                                          p.IF_curr_exp, 
+                                          cell_params_lif,
                                           label='out_layer_exc{}'.format(i)))
-        out_layer_inh.append(p.Population(n_pop, p.IF_curr_exp, cell_params_lif, 
+        out_layer_inh.append(p.Population(n_pop, 
+                                          p.IF_curr_exp, 
+                                          cell_params_lif, 
                                           label='out_layer_inh{}'.format(i)))
         out_layer_exc[i].record()
 
     # Noisy poisson population at the input
-    poisson_input=p.Population(n_pop*2,p.SpikeSourcePoisson,{"rate":noise_poi_rate})
+    poisson_input = p.Population(n_pop*2, 
+                                 p.SpikeSourcePoisson,
+                                 {"rate":noise_poi_rate})
 
     # Record Spikes
     enc_layer.record()
@@ -377,67 +394,86 @@ def train_snn():
             for jj in range(n_pop): # For each neuron in each population of output layer
                 if prob_stdp > np.random.rand(): # If the prob of connection is satiesfied
                     # Make the connection
-                    conn_stdp_list[i].append([ii, jj, wei_init_stdp, del_init_stdp]) 
+                    conn_stdp_list[i].append([ii,
+                                              jj, 
+                                              wei_init_stdp, 
+                                              del_init_stdp]) 
 
     if save == True:
         np.save("conn_stdp_list",conn_stdp_list)
 
     ## Output Layer Inhibitory Connection List
-    conn_output_inh=[[] for i in range(n_cl) for j in range(n_cl) if i!=j]
-    c=0
+    conn_output_inh = [[] for i in range(n_cl) for j in range(n_cl) if i!=j]
+    c = 0
     for i in range(n_cl):
         for j in range(n_cl):
-            if i!=j:
+            if i != j:
                 for ii in range(n_pop):
                     for jj in range(n_pop):
-                        if prob_output_inh>np.random.rand():
-                            conn_output_inh[c].append([ii,jj,wei_cls_inh,del_cls_inh])
+                        if prob_output_inh > np.random.rand():
+                            conn_output_inh[c].append([ii,
+                                                       jj,
+                                                       wei_cls_inh,
+                                                       del_cls_inh])
                 c+=1
     if save == True:
         np.save("conn_output_inh",conn_output_inh)
 
     ## Spike Source to Encoding Layer
-    p.Projection(spike_source,enc_layer,p.FromListConnector(conn_inp_enc))
+    p.Projection(spike_source, enc_layer,
+                 p.FromListConnector(conn_inp_enc))
     ## Encoding Layer to Filtering Layer
-    p.Projection(enc_layer,filt_layer,p.OneToOneConnector(weights=wei_enc_filt,
-                                                          delays=del_enc_filt))
+    p.Projection(enc_layer, filt_layer,
+                 p.OneToOneConnector(weights=wei_enc_filt,
+                                     delays=del_enc_filt))
     ## Filtering Layer Inhibitory
-    p.Projection(filt_layer,filt_layer,p.FromListConnector(conn_filt_inh),
-                                                           target="inhibitory")
+    p.Projection(filt_layer, filt_layer,
+                 p.FromListConnector(conn_filt_inh),
+                 target="inhibitory")
 
     ## STDP Connection between Filtering Layer and Output Layer
-    timing_rule=p.SpikePairRule(tau_plus=tau_pl, tau_minus=tau_min)
-    weight_rule=p.AdditiveWeightDependence(w_max=stdp_w_max, w_min=stdp_w_min, 
-                                           A_plus=stdp_A_pl, A_minus=stdp_A_min)
+    timing_rule = p.SpikePairRule(tau_plus=tau_pl, 
+                                  tau_minus=tau_min)
+    weight_rule = p.AdditiveWeightDependence(w_max=stdp_w_max, 
+                                             w_min=stdp_w_min, 
+                                             A_plus=stdp_A_pl, 
+                                             A_minus=stdp_A_min)
     stdp_model = p.STDPMechanism(timing_dependence=timing_rule, 
                                  weight_dependence=weight_rule)
     # stdp connection
-    stdp_proj=[]
+    stdp_proj = []
     for j in range(n_cl):
         stdp_proj.append(
             p.Projection(filt_layer,out_layer_exc[j], 
                    p.FromListConnector(conn_stdp_list[j]), 
-                   synapse_dynamics=p.SynapseDynamics(slow=stdp_model)))
+                   synapse_dynamics = p.SynapseDynamics(slow=stdp_model)))
 
     ## Connection between Output Layer neurons
-    c=0
+    c = 0
     for i in range(n_cl):
         p.Projection(out_layer_exc[i], out_layer_inh[i], 
-            p.OneToOneConnector(weights=wei_cls_exc,delays=del_cls_exc))
+                     p.OneToOneConnector(weights=wei_cls_exc,
+                                         delays=del_cls_exc))
         iter_array=[j for j in range(n_cl) if j!=i]
         for j in iter_array:
-            p.Projection(out_layer_exc[i],out_layer_exc[j],
-                p.FromListConnector(conn_output_inh[c]),target="inhibitory")
-            c+=1
+            p.Projection(out_layer_exc[i], out_layer_exc[j],
+                         p.FromListConnector(conn_output_inh[c]),
+                                             target="inhibitory")
+            c += 1
 
     ## Spike Source Array to Output
     for i in range(n_cl):
-        p.Projection(out_spike_source[i], out_layer_exc[i], p.AllToAllConnector\
-            (weights=wei_source_outp,delays=del_source_outp))
-        iter_array = [j for j in range(n_cl) if j!=i]
+        p.Projection(out_spike_source[i], 
+                     out_layer_exc[i], 
+                     p.AllToAllConnector(weights=wei_source_outp,
+                                         delays=del_source_outp))
+        iter_array = [j for j in range(n_cl) if j != i]
         for j in iter_array:
-                p.Projection(out_spike_source[i],out_layer_exc[j],p.AllToAllConnector\
-                (weights=wei_source_outp,delays=del_source_outp),target="inhibitory")
+                p.Projection(out_spike_source[i],
+                             out_layer_exc[j],
+                             p.AllToAllConnector(weights=wei_source_outp,
+                                                 delays=del_source_outp),
+                                                 target="inhibitory")
     #for i in range(n_cl):
     #    p.Projection(out_spike_source[i], out_layer_exc[i], p.AllToAllConnector\
     #        (weights=wei_source_outp, delays=del_source_outp))
@@ -445,24 +481,26 @@ def train_snn():
     #        (weights=wei_source_outp, delays=del_source_outp),target="inhibitory")
 
     ## Noisy poisson connection to encoding layer
-    p.Projection(poisson_input,enc_layer,p.FixedProbabilityConnector\
-        (p_connect=prob_noise_poi_conn, weights=wei_noise_poi, delays=del_noise_poi))
+    p.Projection(poisson_input, enc_layer, 
+                 p.FixedProbabilityConnector(p_connect=prob_noise_poi_conn, 
+                                             weights=wei_noise_poi, 
+                                             delays=del_noise_poi))
             
     ###############################################################################
     ## Simulation
     ###############################################################################
     p.run(SIM_TIME)
 
-    Enc_Spikes=enc_layer.getSpikes()
-    Filt_Exc_Spikes=filt_layer.getSpikes()
+    Enc_Spikes = enc_layer.getSpikes()
+    Filt_Exc_Spikes = filt_layer.getSpikes()
 
-    Out_Spikes=[[] for i in range(n_cl)]
+    Out_Spikes = [[] for i in range(n_cl)]
     for i in range(n_cl):
-        Out_Spikes[i]=out_layer_exc[i].getSpikes()
+        Out_Spikes[i] = out_layer_exc[i].getSpikes()
 
-    wei=[]
+    wei = []
     for i in range(n_cl):
-        ww=stdp_proj[i].getWeights()
+        ww = stdp_proj[i].getWeights()
         if save == True:
             np.save("stdp_weights{}".format(i),ww)
         wei.append(ww)
@@ -526,7 +564,7 @@ def train_snn():
         pylab.show()
 
     ## Plot 4: STDP WEIGHTS
-    if 1:
+    if 0:
         pylab.figure()
         pylab.xlabel('Weight ID')
         pylab.ylabel('Weight Value')
@@ -600,7 +638,7 @@ def train_snn():
         np.save("diff_thr2",diff_thr2)
 
     ## Plot 6: Total Spiking Activity of Neurons at Decomposition Layer for Each Class
-    if 1:
+    if 0:
         a4=sum_filt[0]
         b4=sum_filt[1]
         pylab.figure()
@@ -613,3 +651,6 @@ def train_snn():
         pylab.hold(False)
         pylab.legend(["Activity to AN1","Activity to AN2"])
         pylab.show()
+
+if __name__ == '__main__':
+    train_snn()

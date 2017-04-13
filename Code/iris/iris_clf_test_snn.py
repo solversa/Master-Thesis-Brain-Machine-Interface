@@ -15,7 +15,6 @@ import scipy.io as sio
 
 
 def test_snn():
-
     ###############################################################################
     ## Function Definitions
     ###############################################################################  
@@ -172,7 +171,7 @@ def test_snn():
     #cls = np.load("y_test.npy")
     cls = cls.reshape(len(cls), 1)
     r_cl, c_cl = np.shape(cls)
-    cls = list(np.reshape(cls, (1, r_cl * c_cl))[0]-1)
+    cls = list(np.reshape(cls, (1, r_cl * c_cl))[0])
 
     outputs = cls[:n_trials]
     poi_rate = data_rates[:n_feature * n_trials]
@@ -216,6 +215,7 @@ def test_snn():
                              p.IF_curr_exp,
                              cell_params_lif,
                              label='enc_layer')
+    
     filt_layer = p.Population(n_feature * n_pop,
                               p.IF_curr_exp, 
                               cell_params_lif, 
@@ -426,7 +426,7 @@ def test_snn():
             )
 
     ## Plot 4
-    if 1:
+    if 0:
     #    pylab.figure()
     #    pylab.hold(True)
     #    pylab.plot(sum_output[0], "b.")
@@ -525,3 +525,8 @@ def test_snn():
         pylab.hold(False)
         pylab.legend(["Activity to AN1","Activity to AN2"])
         pylab.show()   
+
+    return rate
+
+if __name__ == '__main__':
+    test_snn()
