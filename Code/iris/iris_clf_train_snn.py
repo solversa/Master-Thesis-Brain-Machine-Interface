@@ -19,9 +19,9 @@ def train_snn():
 
     save = True    # True to save all parameters of the network
 
-    ###############################################################################
+    ############################################################################
     ## Function Definitions
-    ###############################################################################  
+    ############################################################################  
     def gaussian(x, mu, sig):
         return np.float16(np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.))))
 
@@ -66,79 +66,11 @@ def train_snn():
     def get_data(trial_num, test_num=10):
         # trial_num:    number of training samples
         # test_num:     number of test samples
-        path = "/home/rychly/Dropbox/[TUM]/4. WiSe 1617/Masterarbeit/data/iris/iris.csv"
-        data = pd.read_csv(path)
-        if trial_num + test_num > len(data):
-            print(("ERROR: not enough data for trial_num={},",
-                   " test_num={}").format(trial_num, test_num))
-            return 1
-        # check if trial_num uneven number to separate
-        trail_num_c0 = int(trial_num) / 2
-        trail_num_c1 = int(trial_num) / 2 
-        if trail_num_c0 + trail_num_c1  != trial_num: # if uneven number of samples
-            trail_num_c0 += 1                         # c1 will have one more than c2
-        # check if test_num uneven number to separate
-        test_num_c0 = int(test_num) / 2
-        test_num_c1 = int(test_num) / 2 
-        if test_num_c0 + test_num_c1  != test_num: # if uneven number of samples
-            test_num_c0 += 1    
-        ### PROCESS DATA
-        data_arr = data.values 
-        # shuffle data      
-        np.random.shuffle(data_arr)
-                # split data
-        y = data_arr.T[5]
-        X = np.delete(data_arr, 5, axis=1)
-        # create numerical labels
-        label_list = list(set(y))
-        y_numeric = np.zeros(len(y))
-        for i, label in enumerate(y):
-            y_numeric[i] = label_list.index(label)
-        # cut class 2
-        class_cut = 2
-        c2_idx_list = np.where(y_numeric == class_cut)
-        X_2class = np.delete(X, c2_idx_list, axis=0)    # row: axis=0, col axis=1
-        y_2class = np.delete(y_numeric, c2_idx_list)
-        # Get train set (size = trial_num + test_num)
-        c0_idx_list = np.where(y_2class == 0)
-        c1_idx_list = np.where(y_2class == 1)
-        c0_num_del = len(c0_idx_list) - (trail_num_c0 + test_num_c0)
-        c1_num_del = len(c1_idx_list) - (trail_num_c1 + test_num_c1)
-        # delete not needed (for test + train) samples 
-        X_2class = np.delete(X_2class, 
-                            np.vstack((c0_idx_list[0][:c0_num_del],
-                                       c1_idx_list[0][:c1_num_del])), 
-                            axis=0) 
-        y_2class = np.delete(y_2class, 
-                            np.vstack((c0_idx_list[0][:c0_num_del],
-                                       c1_idx_list[0][:c1_num_del]))) 
-        # separate test set from train set
-        X_test_c0 = X_2class[c0_idx_list][:test_num_c0]
-        X_test_c1 = X_2class[c1_idx_list][:test_num_c1]
-        y_test_c0 = y_2class[c0_idx_list][:test_num_c0]
-        y_test_c1 = y_2class[c1_idx_list][:test_num_c1]
-        X_test = np.vstack((X_test_c0, X_test_c1))
-        y_test = np.hstack((y_test_c0, y_test_c1))
-        # remove test data from training data
-        X_train = np.delete(X_2class, 
-                            np.vstack((c0_idx_list[0][:test_num_c0],
-                                       c1_idx_list[0][:test_num_c1])), 
-                            axis=0) 
-        y_train = np.delete(y_2class, 
-                            np.vstack((c0_idx_list[0][:test_num_c0],
-                                       c1_idx_list[0][:test_num_c1]))) 
-        # save training and test set
-        np.save('output_files/X_train.npy', X_train)
-        np.save('output_files/y_train.npy', y_train)
-        np.save('output_files/X_test.npy', X_test)
-        np.save('output_files/y_test.npy', y_test.reshape(1, len(y_test))\
-                                                 .flatten())
-        # return train set
-        return X_train, y_train
+        pass
 
-    ###############################################################################
+    ############################################################################
     ## Parameters
-    ###############################################################################
+    ############################################################################
     # Simulation Parameters
     trial_num       = 90 # How many samples (trials) from data will be presented 
     n_training      = 2  # How many times the samples will be iterated
@@ -197,7 +129,7 @@ def train_snn():
     prob_noise_poi_conn = 0.02
 
     ## STDP Parameters
-    tau_pl      = 0.2           # (0.2 - 0.3 works)
+    tau_pl      = 0.3           # (0.2 - 0.3 works)
     tau_min     = tau_pl        # default tau_pl
     stdp_w_max  = 0.4           # default 0.4
     stdp_w_min  = 0.0           # default 0.0
@@ -218,17 +150,17 @@ def train_snn():
                        }
 
 
-    ###############################################################################
+    ############################################################################
     ## Data Extraction
-    ###############################################################################
+    ############################################################################
 
     ## Extract Feature Data
-    scale_data =2. # Scale features into [0-scale_data] range
+    scale_data = 2. # Scale features into [0-scale_data] range
 
-    # Load feature matrix
+    # Load training data
     #data, cls = get_data(trial_num)
-    data = np.load('output_files/X_train_const.npy')
-    cls = np.load('output_files/y_train_const.npy')
+    data = np.load('data/X_iris_train.npy')
+    cls = np.load('data/y_iris_train.npy')
 
     r,c = np.shape(data)
 
@@ -286,9 +218,9 @@ def train_snn():
         np.save("output_files/parameters1",parameter_dict)
         np.save("output_files/parameters2",del_src_enc)
 
-    ###############################################################################
+    ############################################################################
     ## Create populations for different layers
-    ###############################################################################
+    ############################################################################
     poi_layer = []
     enc_layer = []
     filt_layer_exc = []
@@ -310,9 +242,9 @@ def train_snn():
 
     if 0:    # if True:  calculate "spike_times" (randomly) new
              # uf False: load previously saved "spike_times"
-        np.save('output_files/spike_times.npy', spike_times)
+        np.save('output_files/spike_times_train.npy', spike_times)
     else:
-        spike_times = np.load('output_files/spike_times.npy')
+        spike_times = np.load('output_files/spike_times_train.npy')
 
 
 
@@ -381,9 +313,9 @@ def train_snn():
     #enc_layer.initialize('v',p.RandomDistribution('uniform',[-51.,-69.]))
     #filt_layer.initialize('v',p.RandomDistribution('uniform',[-51.,-69.]))
 
-    ###############################################################################
+    ############################################################################
     ## Projections
-    ###############################################################################
+    ############################################################################
 
     ## Connection List from Spike Source Array to Encoding Layer
     conn_inp_enc=[]
@@ -519,14 +451,15 @@ def train_snn():
     #        (weights=wei_source_outp, delays=del_source_outp),target="inhibitory")
 
     ## Noisy poisson connection to encoding layer
-#    p.Projection(poisson_input, enc_layer, 
-#                 p.FixedProbabilityConnector(p_connect=prob_noise_poi_conn, 
-#                                             weights=wei_noise_poi, 
-#                                             delays=del_noise_poi))
-            
-    ###############################################################################
+    if 0:
+        p.Projection(poisson_input, enc_layer, 
+                     p.FixedProbabilityConnector(p_connect=prob_noise_poi_conn, 
+                                                 weights=wei_noise_poi, 
+                                                 delays=del_noise_poi))
+                
+    ############################################################################
     ## Simulation
-    ###############################################################################
+    ############################################################################
     p.run(SIM_TIME)
 
     Enc_Spikes = enc_layer.getSpikes()
@@ -544,9 +477,9 @@ def train_snn():
         wei.append(ww)
 
     p.end()
-    ###############################################################################
+    ############################################################################
     ## Plot
-    ###############################################################################
+    ############################################################################
     ## Plot 1: Encoding Layer Raster Plot
     if 0:
         pylab.figure()

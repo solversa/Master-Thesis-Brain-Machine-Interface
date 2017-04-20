@@ -66,9 +66,9 @@ def test_snn():
     # Load Parameter
     parameters = np.load("output_files/parameters1.npy")
     parameters = parameters.item()
-    # Load data
-    data = np.load('output_files/X_test_const.npy')
-    cls = np.load("output_files/y_test_const.npy")
+    # Load test data
+    data = np.load('data/X_iris_test.npy')
+    cls = np.load('data/y_iris_test.npy')
     # Simulation Parameters
 
     trial_num       = parameters["trial_num"] # How many samples (trials) from data will be presented 
@@ -110,9 +110,9 @@ def test_snn():
     max_fr_rate_output = parameters["max_fr_rate_output"] # Maximum firing rate at output (supervisory signal)
 
     ## Connection Probabilities
-    prob_filt_inh       = parameters["prob_filt_inh"] # Probability of connectivity inhibitory connections at Filtering Layer
+    prob_filt_inh       = parameters["prob_filt_inh"] # Prob of connectivity inhi-connections at Filtering Layer
     prob_stdp           = parameters["prob_stdp"] # Probability of STDP connections
-    prob_output_inh     = parameters["prob_output_inh"] # Probability of inhibitory connections at Output Layer
+    prob_output_inh     = parameters["prob_output_inh"] # Prob of inhi-connections at Output Layer
     prob_noise_poi_conn = parameters["prob_noise_poi_conn"]
 
     ## STDP Parameters
@@ -202,6 +202,13 @@ def test_snn():
                                  np.random.randint(100))
             for t in times:
                 spike_times[j].append(t)
+
+    if 0:    # if True:  calculate "spike_times" (randomly) new
+             # uf False: load previously saved "spike_times"
+        np.save('output_files/spike_times_test.npy', spike_times)
+    else:
+        spike_times = np.load('output_files/spike_times_test.npy')
+
 
 
     # Spike source of input layer
@@ -311,8 +318,14 @@ def test_snn():
             c+=1
 
     ## Noisy poisson connection to encoding layer
-    p.Projection(poisson_input ,enc_layer, p.FixedProbabilityConnector\
-        (p_connect = prob_noise_poi_conn, weights=wei_noise_poi, delays = del_noise_poi))
+    if 0:
+        p.Projection(poisson_input,
+                     enc_layer, 
+                     p.FixedProbabilityConnector(p_connect=prob_noise_poi_conn,
+                                                 weights=wei_noise_poi, 
+                                                 delays = del_noise_poi))
+    
+
     ###############################################################################
     ## Simulation
     ###############################################################################
@@ -471,6 +484,9 @@ def test_snn():
     wrong = np.sum(np.abs(cl - r_cl))
     rate = (n_trials - wrong) / n_trials
     print("success rate: {}%".format(abs(rate)*100.))
+
+    print("cl:\n", cl)
+    print("r_cl:\n", r_cl)
 
     ## Plot 5
     if 0:
