@@ -14,10 +14,45 @@ import numpy as np
 import pandas as pd
 import pylab
 import scipy.io as sio
+import os
 
-def train_snn():
-
-    save = True    # True to save all parameters of the network
+def train_snn(### Settings
+              save            = True,    # True to save all parameters of the network
+              homeostasis     = False,
+              randomness      = False,
+              ### Parameters
+              n_training      = 1,  # How many times the samples will be iterated
+              ts              = 1., # Timestep of Spinnaker (ms)
+              n_feature       = 90, # Number of features (= 4 features * 20 neurons)
+                                #              => 20 neuros: resolution of encoding
+              # Weights
+              wei_src_enc     = .2,    # From Source Array at input to Encoding Layer(Exc)
+              wei_enc_filt    = .6,    # From Encoding Layer to Filtering Layer Exc neurons (Exc)
+              wei_filt_inh    = 0.03,  # From Filtering Layer Inh neurons to Exc neurons (Inh)
+              wei_init_stdp   = .0,    # From Filtering Layer Exc neurons to Output Layer (Exc)
+              wei_cls_exc     = 0.9,   # From Output Layer Exc neurons to Inh neurons (Exc)
+              wei_cls_inh     = 10,     # 0.1   # From Output Layer Inh neurons to Exc neurons (Inh) 
+              wei_source_outp = 10.,   # From Source Array at output to Output Layer Exc neurons (Exc)
+              wei_noise_poi   = 0.02,
+              # Delays
+              del_init_stdp   = 1.,
+              del_source_outp = 1.,
+              del_noise_poi   = 1.,
+              # Connection Probabilities
+              prob_filt_inh   = .4, # Prob of connectivity inhibitory connections at FilT_Layer
+              prob_stdp       = 1., # Prob of STDP connections
+              prob_output_inh = .7, # Prob of inhibitory connections at Output Layer
+              prob_noise_poi_conn = 0.02,
+              ## STDP Parameters
+              tau_pl         = 0.3,           # (0.2 - 0.3 works)
+              stdp_w_max     = 0.4,           # default 0.4
+              stdp_w_min     = 0.0,           # default 0.0
+              stdp_A_pl      = 0.01,          # default 0.01 (below 0.01 weights don't change)
+                                # => minus in order to get symmetric curve
+              # Data Extraction
+              scale_data     = 2. # Scale features into [0-scale_data] range
+              ):
+    
 
     ############################################################################
     ## Function Definitions
@@ -71,38 +106,43 @@ def train_snn():
     ############################################################################
     ## Parameters
     ############################################################################
+    # Load training data
+    #data, cls = get_data(trial_num)
+    data = np.load('data/X_iris_train.npy')
+    cls = np.load('data/y_iris_train.npy')
+
     # Simulation Parameters
-    trial_num       = 90 # How many samples (trials) from data will be presented 
-    n_training      = 2  # How many times the samples will be iterated
+    trial_num = len(cls) # How many samples (trials) from data will be presented 
+    #n_training      = 1  # How many times the samples will be iterated
     n_trials        = n_training * trial_num # Total trials
     time_int_trials = 200. # (ms) Time to present each trial data 
     SIM_TIME        = n_trials * time_int_trials # Total simulation time (ms)
-    ts              = 1. # Timestep of Spinnaker (ms)
+    #ts              = 1. # Timestep of Spinnaker (ms)
     min_del         = ts
     max_del         = 144 * ts
     p.setup(timestep=ts, min_delay=min_del, max_delay=max_del)
 
 
     ## Neuron Numbers
-    n_feature = 90   # Number of features (= 4 features * 20 neurons)
+    #n_feature = 90   # Number of features (= 4 features * 20 neurons)
                      #           => 20 neuros: resolution of encoding
     n_pop     = 4    # Number of neurons in one population
     n_cl      = 2    # Number of classes at the output
 
     ## Connection Parameters
     # Weights
-    wei_src_enc     = .2    # From Source Array at input to Encoding Layer(Exc)
-    wei_enc_filt    = .6    # From Encoding Layer to Filtering Layer Exc neurons (Exc)
-    wei_filt_inh    = 0.03  # From Filtering Layer Inh neurons to Exc neurons (Inh)
-    wei_init_stdp   = .0    # From Filtering Layer Exc neurons to Output Layer (Exc)
-    wei_cls_exc     = 0.9   # From Output Layer Exc neurons to Inh neurons (Exc)
-    wei_cls_inh     = 10     # 0.1   # From Output Layer Inh neurons to Exc neurons (Inh) 
-    wei_source_outp = 10.   # From Source Array at output to Output Layer Exc neurons (Exc)
-    wei_noise_poi   = 0.02
+ #   wei_src_enc     = .2    # From Source Array at input to Encoding Layer(Exc)
+ #   wei_enc_filt    = .6    # From Encoding Layer to Filtering Layer Exc neurons (Exc)
+ #   wei_filt_inh    = 0.03  # From Filtering Layer Inh neurons to Exc neurons (Inh)
+ #   wei_init_stdp   = .0    # From Filtering Layer Exc neurons to Output Layer (Exc)
+ #   wei_cls_exc     = 0.9   # From Output Layer Exc neurons to Inh neurons (Exc)
+ #   wei_cls_inh     = 10     # 0.1   # From Output Layer Inh neurons to Exc neurons (Inh) 
+ #   wei_source_outp = 10.   # From Source Array at output to Output Layer Exc neurons (Exc)
+ #   wei_noise_poi   = 0.02
 
     # Delays
-    if 0:    # if True:  calculate "del_src_enc" (randomly) new
-             # uf False: load previously saved "del_src_enc"
+    if randomness == True:    # if True:  calculate "del_src_enc" (randomly) new
+                              # if False: load previously saved "del_src_enc"
         del_src_enc = [int(np.random.randint(n_pop)+1) 
                            for i in range(n_feature*n_pop)]
         np.save("output_files/del_src_enc.npy", del_src_enc)
@@ -111,11 +151,11 @@ def train_snn():
 
     del_enc_filt    = ts
     del_filt_inh    = ts
-    del_init_stdp   = 1.
+#    del_init_stdp   = 1.
     del_cls_exc     = ts
     del_cls_inh     = ts
-    del_source_outp = 1.
-    del_noise_poi   = 1.
+#    del_source_outp = 1.
+#    del_noise_poi   = 1.
 
     # Firing Rates
     noise_poi_rate  = 10. 
@@ -123,17 +163,17 @@ def train_snn():
     max_fr_rate_output = 20. # Maximum firing rate at output (supervisory signal)
 
     ## Connection Probabilities
-    prob_filt_inh   = .4 # Prob of connectivity inhibitory connections at FilT_Layer
-    prob_stdp       = 1. # Prob of STDP connections
-    prob_output_inh = .7 # Prob of inhibitory connections at Output Layer
-    prob_noise_poi_conn = 0.02
+#    prob_filt_inh   = .4 # Prob of connectivity inhibitory connections at FilT_Layer
+#    prob_stdp       = 1. # Prob of STDP connections
+#    prob_output_inh = .7 # Prob of inhibitory connections at Output Layer
+#    prob_noise_poi_conn = 0.02
 
     ## STDP Parameters
-    tau_pl      = 0.3           # (0.2 - 0.3 works)
+#    tau_pl      = 0.3           # (0.2 - 0.3 works)
     tau_min     = tau_pl        # default tau_pl
-    stdp_w_max  = 0.4           # default 0.4
-    stdp_w_min  = 0.0           # default 0.0
-    stdp_A_pl   = 0.01          # default 0.01 (below 0.01 weights don't change)
+#    stdp_w_max  = 0.4           # default 0.4
+#    stdp_w_min  = 0.0           # default 0.0
+#    stdp_A_pl   = 0.01          # default 0.01 (below 0.01 weights don't change)
     stdp_A_min  = -stdp_A_pl    # default - stdp_A_pl 
                                 # => minus in order to get symmetric curve
 
@@ -155,12 +195,7 @@ def train_snn():
     ############################################################################
 
     ## Extract Feature Data
-    scale_data = 2. # Scale features into [0-scale_data] range
-
-    # Load training data
-    #data, cls = get_data(trial_num)
-    data = np.load('data/X_iris_train.npy')
-    cls = np.load('data/y_iris_train.npy')
+#    scale_data = 2. # Scale features into [0-scale_data] range
 
     r,c = np.shape(data)
 
@@ -240,8 +275,8 @@ def train_snn():
             for t in times:
                 spike_times[j].append(t)
 
-    if 0:    # if True:  calculate "spike_times" (randomly) new
-             # uf False: load previously saved "spike_times"
+    if randomness == True:    # if True:  calculate "spike_times" (randomly) new
+                              # uf False: load previously saved "spike_times"
         np.save('output_files/spike_times_train.npy', spike_times)
     else:
         spike_times = np.load('output_files/spike_times_train.npy')
@@ -259,8 +294,8 @@ def train_snn():
         for t in times:
                 out_spike_times[int(ind)].append(t)
 
-    if 0:    # if True:  calculate "out_spike_times" (randomly) new
-             # uf False: load previously saved "out_spike_times"
+    if randomness == True:    # if True:  calculate "out_spike_times" (randomly) new
+                              # uf False: load previously saved "out_spike_times"
         np.save('output_files/out_spike_times.npy', out_spike_times)
     else:
         out_spike_times = np.load('output_files/out_spike_times.npy')
@@ -329,8 +364,8 @@ def train_snn():
         np.save("output_files/conn_inp_enc",conn_inp_enc)
 
     ## Connection List for Filtering Layer Inhibitory
-    if 0:    # if True:  calculate conn_filt_inh (randomly) new
-             # uf False: load previously saved conn_filt_inh
+    if randomness == True:    # if True:  calculate conn_filt_inh (randomly) new
+                              # uf False: load previously saved conn_filt_inh
         conn_filt_inh=[]
         for i in range(n_feature):
             rng1=i*n_pop
@@ -347,19 +382,29 @@ def train_snn():
         conn_filt_inh = np.load('output_files/conn_filt_inh.npy')
 
     
-    ## STDP Connection List
-    if 0:    # if True:  calculate conn_stdp_list (randomly) new
-             # uf False: load previously saved conn_stdp_list
+    ## STDP Connection List 
+    if randomness == True:    # if True:  calculate conn_stdp_list (randomly) new
+                              # uf False: load previously saved conn_stdp_list
         conn_stdp_list=[[] for i in range(n_cl)]
         for i in range(n_cl): # For each population at output layer
+            if homeostasis == True:
+                cl_weights = np.load("output_files/stdp_weights{}.npy".format(i))
+                w = 0
             for ii in range(n_pop * n_feature): # For each neuron in filtering layer
                 for jj in range(n_pop): # For each neuron in each population of output layer
                     if prob_stdp > np.random.rand(): # If the prob of connection is satiesfied
                         # Make the connection
-                        conn_stdp_list[i].append([ii,
-                                                  jj, 
-                                                  wei_init_stdp, 
-                                                  del_init_stdp]) 
+                        if homeostasis == True:
+                            conn_stdp_list[i].append([ii,
+                                                      jj, 
+                                                      cl_weights[w], 
+                                                      del_init_stdp])
+                            w += 1 
+                        else:
+                            conn_stdp_list[i].append([ii,
+                                                      jj, 
+                                                      wei_init_stdp, 
+                                                      del_init_stdp]) 
         if save == True:
             np.save('output_files/conn_stdp_list.npy', conn_stdp_list)
     else:
@@ -367,8 +412,8 @@ def train_snn():
 
     
     ## Output Layer Inhibitory Connection List
-    if 0:    # if True:  calculate conn_stdp_list (randomly) new
-             # uf False: load previously saved conn_stdp_list
+    if randomness == True:    # if True:  calculate conn_stdp_list (randomly) new
+                              # uf False: load previously saved conn_stdp_list
         conn_output_inh = [[] for i in range(n_cl) for j in range(n_cl) if i!=j]
         c = 0
         for i in range(n_cl):
@@ -410,7 +455,7 @@ def train_snn():
                                              A_minus=stdp_A_min)
     stdp_model = p.STDPMechanism(timing_dependence=timing_rule, 
                                  weight_dependence=weight_rule)
-    # stdp connection
+    # STDP connection
     stdp_proj = []
     for j in range(n_cl):
         stdp_proj.append(
@@ -451,7 +496,8 @@ def train_snn():
     #        (weights=wei_source_outp, delays=del_source_outp),target="inhibitory")
 
     ## Noisy poisson connection to encoding layer
-    if 0:
+    if randomness == True:    # if True:  connect noise to network
+                              # if False: don't use noise in network
         p.Projection(poisson_input, enc_layer, 
                      p.FixedProbabilityConnector(p_connect=prob_noise_poi_conn, 
                                                  weights=wei_noise_poi, 
@@ -535,7 +581,7 @@ def train_snn():
         pylab.show()
 
     ## Plot 4: STDP WEIGHTS
-    if 0:
+    if 1:
         pylab.figure()
         pylab.xlabel('Weight ID')
         pylab.ylabel('Weight Value')
@@ -548,7 +594,23 @@ def train_snn():
         pylab.axis([-10,n_pop*n_feature*n_pop*0.5+10,-stdp_w_max,2*stdp_w_max])
         str_legend=["To Cl {}".format(i+1) for i in range(n_cl)]
         pylab.legend(str_legend)
-        pylab.show()
+        #pylab.show()
+        fname = 'plots/weights_1.png'
+        while True:
+            if os.path.isfile(fname):
+                if len(fname) == 19:
+                    new_num =  int(fname.split('.')[0][-1]) + 1
+                elif len(fname) == 20:
+                    new_num =  int(fname.split('.')[0][-2:]) + 1
+                else:
+                    new_num =  int(fname.split('.')[0][-3:]) + 1
+                fname = fname.split('.')[0][:-1] + str(new_num) + '.png'
+            else:
+                pylab.savefig(fname)
+                break
+        
+
+
         #pylab.figure()
         #pylab.xlabel('Weight ID')
         #pylab.ylabel('Weight Value')

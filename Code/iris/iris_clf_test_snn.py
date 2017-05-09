@@ -14,7 +14,7 @@ import time
 import scipy.io as sio
 
 
-def test_snn():
+def test_snn(randomness=False):
     ###############################################################################
     ## Function Definitions
     ###############################################################################  
@@ -203,8 +203,8 @@ def test_snn():
             for t in times:
                 spike_times[j].append(t)
 
-    if 0:    # if True:  calculate "spike_times" (randomly) new
-             # uf False: load previously saved "spike_times"
+    if randomness == True:    # if True:  calculate "spike_times" (randomly) new
+                              # if False: load previously saved "spike_times"
         np.save('output_files/spike_times_test.npy', spike_times)
     else:
         spike_times = np.load('output_files/spike_times_test.npy')
@@ -318,7 +318,8 @@ def test_snn():
             c+=1
 
     ## Noisy poisson connection to encoding layer
-    if 0:
+    if randomness == True:    # if True:  connect noise to network
+                              # if False: don't use noise in network
         p.Projection(poisson_input,
                      enc_layer, 
                      p.FixedProbabilityConnector(p_connect=prob_noise_poi_conn,
