@@ -12,7 +12,8 @@ The model in this work is solely trained and used on the SpiNNaker neuromorphic 
 ### Outline:
 #### Step 1: SNN for Iris data set
 We implement a spiking neural network (SNN) with a Spike-Time-Dependent Plasticity  (STDP) learning algorithm to classify a binary version of the iris data set. 
-Since the Iris data set is proven to be easy to classify we can check if our implementation of the SNN and STDP works. 
+Since the Iris data set is proven to be easy to classify we can check if our implementation of the SNN and STDP works.
+ 
 Since we didn't manage to achieve consistant calssification results on the iris dataset we are trying different changes in architecture and coding:
 - Remove (some) randomness of the network
 - Time coding instead of population coding 
