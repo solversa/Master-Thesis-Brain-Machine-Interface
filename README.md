@@ -17,7 +17,7 @@ Since the Iris data set is proven to be easy to classify we can check if our imp
 Since we didn't manage to achieve consistant calssification results on the iris dataset we are trying different changes in architecture and coding:
 - Remove (some) randomness of the network to see what causes the high variance in the calssification results
 - Time coding instead of population coding 
-- Homeostasis: Since its tricky to use STDP in an unbalanced network we multiply the weights between every training epoch by a number between 0 and 1. This should lead to the convergence of the network to a stable solution.
+- Homeostasis: Since its tricky to use STDP in an unbalanced network like ours we multiply the weights between every training epoch by a number between 0 and 1. This should lead to the convergence of the network to a stable solution.
 - Add delay to the inputs reversely proportional to the feature values
 
 #### Step 2: EEG Feature Extraction
