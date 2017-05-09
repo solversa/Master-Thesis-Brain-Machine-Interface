@@ -72,19 +72,22 @@ exp_dict[0]['y'] = np.delete(exp_dict[0]['y'], artifact_idx)
 
 ### MNE Info Object
 info = [[] for _ in range(mat.shape[1])]
-info[0] = mne.create_info(ch_names	  = ['eeg_1', 'eeg_2', 'eeg_3', 'eog_4', 'eog_5', 'eog_6'],
+info[0] = mne.create_info(ch_names	  = ['eeg_1', 'eeg_2', 'eeg_3', 'eog_4', 
+									     'eog_5', 'eog_6'],
 						  ch_types 	  = ['eeg','eeg','eeg','eog','eog','eog'],
 						  sfreq 		  = exp_dict[0]['fs'],
 #					      subject_info = {'gender': exp0_dict['gender'],
 #					     				  'age':    exp0_dict['age']}
 						 )
-info[1] = mne.create_info(ch_names	  = ['eeg_1', 'eeg_2', 'eeg_3', 'eog_4', 'eog_5', 'eog_6'],
+info[1] = mne.create_info(ch_names	  = ['eeg_1', 'eeg_2', 'eeg_3', 'eog_4', 
+										 'eog_5', 'eog_6'],
 						  ch_types 	  = ['eeg','eeg','eeg','eog','eog','eog'],
 						  sfreq 		  = exp_dict[1]['fs']
 #					      subject_info = {'gender': exp1_dict['gender'],
 #					   					  'age':    exp1_dict['age']}
 					   	 )
-info[2] = mne.create_info(ch_names	  = ['eeg_1', 'eeg_2', 'eeg_3', 'eog_4', 'eog_5', 'eog_6'],
+info[2] = mne.create_info(ch_names	  = ['eeg_1', 'eeg_2', 'eeg_3', 'eog_4', 
+										 'eog_5', 'eog_6'],
 						 ch_types 	  = ['eeg','eeg','eeg','eog','eog','eog'],
 					     sfreq 		  = exp_dict[2]['fs']
 #					     subject_info = {'gender': exp2_dict['gender'],
@@ -133,11 +136,17 @@ epochs_data[2] = np.zeros((len(exp_dict[2]['trial'].flatten()),
 
 # iterate through trial_start_points
 for i, trial_start in enumerate(events[0][:,0]):     
-	epochs_data[0][i,:,:] = exp_dict[0]['X'].T[trial_start : trial_start+trial_len*sample_freq].T
+	epochs_data[0][i,:,:] = exp_dict[0]['X'].T[trial_start : trial_start
+														     +trial_len
+														     *sample_freq].T
 for i, trial_start in enumerate(events[1][:,0]):     
-	epochs_data[1][i,:,:] = exp_dict[1]['X'].T[trial_start : trial_start+trial_len*sample_freq].T
+	epochs_data[1][i,:,:] = exp_dict[1]['X'].T[trial_start : trial_start
+															 +trial_len
+															 *sample_freq].T
 for i, trial_start in enumerate(events[2][:,0]):     
-	epochs_data[2][i,:,:] = exp_dict[2]['X'].T[trial_start : trial_start+trial_len*sample_freq].T
+	epochs_data[2][i,:,:] = exp_dict[2]['X'].T[trial_start : trial_start
+															 +trial_len
+															 *sample_freq].T
 
 # Epochs
 epochs = [[] for _ in range(mat.shape[1])]
