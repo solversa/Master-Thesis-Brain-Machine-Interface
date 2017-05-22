@@ -67,5 +67,7 @@ The highest classification accuracy with statistical machine learning algorithms
 --------------------------
 ## Data Acquisition 
 As soon as the new G-Tech amplifier for recording EEG signals is available in our lab we will record and work on our own data sets.
+Feature matrices are created from recording session session that typically contain 120 trials:
+![alt text](https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/readme_img/eeg_recording_trial.png)
 
 
