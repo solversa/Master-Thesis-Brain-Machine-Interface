@@ -3,7 +3,7 @@ Master Thesis: Brain Machine Interface
 
 ## Task: Decoding of 3D Imaginary Reach and Grasp Movements from Non-invasive EEG Signals using Spiking Neural Networks on SpiNNaker Neuromorphic Hardware
 
-For the task of decoding the EEG signals a generic multivariate classifier based on a spiking neural network model abstracted from the insect olafactory system (particular the antenna lobe AL) is used.
+For the task of decoding the EEG signals a generic multivariate classifier based on a spiking neural network model abstracted from the insect Olfactory system (particular the antenna lobe AL) is used.
 The model in this work is solely trained and used on the SpiNNaker neuromorphic platform which restricts the implementation of the STDP algorithm used for learning [http://apt.cs.manchester.ac.uk/projects/SpiNNaker/].
 
 ![alt tag](http://www.frontiersin.org/files/Articles/164125/fnins-09-00491-HTML/image_m/fnins-09-00491-g001.jpg)
@@ -32,7 +32,7 @@ Since we showed our network is able to learn (on the iris data set) and STDP wor
 - Network Parameter:
 epochs = 1 (n_training = 4)
 trial_num = 90 (training with full training set, test with remaining 12 samples)
-rand (network randomnes) = on
+rand (network randomness) = on
 - Neuron Parameter:
 tau_pl = 5. 
 stdp_w_max = 0.4
@@ -51,14 +51,14 @@ Until now we use population coding to create spikes from the calculated feature 
 ----------------------
 ## Feature Extraction
 
-There are several ways for extracting features from raw EEG data. We chose the following (and plan to further implement a wavelet transfrom fro feature extraction)
+There are several ways for extracting features from raw EEG data. We chose the following (and plan to further implement a wavelet transform fro feature extraction)
 
-### Features: Bandpower of alpha and beta sub band 
+### Features: Band power of alpha and beta sub band 
 Creating features by calculating the power of the alpha sub bands for each epoch of imaginary movement. 
 ![alt text](https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/readme_img/feat_extract_subbands.png)
 
 
-## Features: Event-Related Synchronization (ERS) and Desynchronization (ERD)
+## Features: Event-Related Synchronization (ERS) and De-synchronization (ERD)
 The highest classification accuracy with statistical machine learning algorithms and the spiking neural network is achieved with the ERS and ERD features.
 ![alt text](https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/readme_img/feat_extract_ersd.png)
 
