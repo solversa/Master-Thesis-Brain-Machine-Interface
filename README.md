@@ -52,9 +52,13 @@ There are several ways for extracting features from raw EEG data. We chose the f
 
 #### Features: Bandpower of alpha and beta sub band 
 Creating features by calculating the power of the alpha sub bands (8-10Hz, 9-11Hz, 10-12Hz, 11-13Hz, 12-14Hz) for each epoch of imaginary movement. 
+![alt text](https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/readme_img/feat_extract_subbands.png)
+
 
 ### Features: Event-Related Synchronization (ERS) and Desynchronization (ERD)
 The highest classification accuracy with statistical machine learning algorithms and the spiking neural network is achieved with the ERS and ERD features.
+![alt text](https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/readme_img/feat_extract_ersd.png)
+
 
 
 
