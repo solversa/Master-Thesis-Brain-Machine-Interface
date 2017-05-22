@@ -15,9 +15,9 @@ The model in this work is solely trained and used on the SpiNNaker neuromorphic 
 I presented my results on the 22.05.17. The slides can be seen in the folder 'Report_Midterm'
 
 --------------------------
-### Spiking Neural Network
+## Spiking Neural Network
 
-#### Iris data set
+### Iris data set
 We implemented a spiking neural network (SNN) with a Spike-Time-Dependent Plasticity  (STDP) learning algorithm to classify a binary version of the iris data set. 
 Since the Iris data set is proven to be easy to classify we can check if our implementation of the SNN and STDP works.
 
@@ -49,17 +49,18 @@ Until now we use population coding to create spikes from the calculated feature 
 
 There are several ways for extracting features from raw EEG data. We chose the following (and plan to further implement a wavelet transfrom fro feature extraction)
 
-#### Features: Bandpower of alpha and beta sub band 
-Creating features by calculating the power of the alpha sub bands (8-10Hz, 9-11Hz, 10-12Hz, 11-13Hz, 12-14Hz) for each epoch of imaginary movement. 
+### Features: Bandpower of alpha and beta sub band 
+Creating features by calculating the power of the alpha sub bands for each epoch of imaginary movement. 
 ![alt text](https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/readme_img/feat_extract_subbands.png)
 
 
-### Features: Event-Related Synchronization (ERS) and Desynchronization (ERD)
+## Features: Event-Related Synchronization (ERS) and Desynchronization (ERD)
 The highest classification accuracy with statistical machine learning algorithms and the spiking neural network is achieved with the ERS and ERD features.
 ![alt text](https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/readme_img/feat_extract_ersd.png)
 
 
-
-
+--------------------------
+## Data Acquisition 
+As soon as the new G-Tech amplifier for recording EEG signals is available in our lab we will record and work on our own data sets.
 
 
