@@ -16,7 +16,6 @@ I presented my results on the 22.05.17. The slides can be seen in the folder 'Re
 
 --------------------------
 ### Spiking Neural Network
---------------------------
 
 ####learning the Iris data set
 We implement a spiking neural network (SNN) with a Spike-Time-Dependent Plasticity  (STDP) learning algorithm to classify a binary version of the iris data set. 
@@ -47,7 +46,6 @@ Until now we use population coding to create spikes from the calculated feature 
 
 ----------------------
 ### Feature Extraction
-----------------------
 
 There are several ways for extracting features from raw EEG data. We chose the following (and plan to further implement a wavelet transfrom fro feature extraction)
 
