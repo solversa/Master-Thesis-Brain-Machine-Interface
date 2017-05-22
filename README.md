@@ -28,7 +28,7 @@ Since the Iris data set is proven to be easy to classify we can check if our imp
 ### Classifying EEG data with the SNN
 Since we showed our network is able to learn (on the iris data set) and STDP works we tried using it to classify imaginary movements from EEG data. For that we use the feature matrices created from the raw EEG data.
 
-=> Results: Our highest reached average accuracy is 68% (over 100 Training and test cycles with the following parameters:
+=> Results: Our highest reached average accuracy is ~68% (over 100 Training and test cycles with the following parameters:
 - Network Parameter:
 epochs = 1 (n_training = 4)
 trial_num = 90 (training with full training set, test with remaining 12 samples)
