@@ -23,7 +23,7 @@ Since the Iris data set is proven to be easy to classify we can check if our imp
 
 => Results: We manage to achieve ~100% classification rate on the iris data set!
 
-#### Classifying EEG data with the SNN
+### Classifying EEG data with the SNN
 Since we showed our network is able to learn (on the iris data set) and STDP works we tried using it to classify imaginary movements from EEG data. For that we use the feature matrices created from the raw EEG data.
 
 => Results: Our highest reached average accuracy is 68% (over 100 Training and test cycles with the following parameters:
@@ -45,7 +45,7 @@ Results: We could not increase the accuracy constantly with this method and alwa
 Until now we use population coding to create spikes from the calculated feature values. In the next weeks we want to implement time coding (and a combination of population and time coding) to hopefully increase the network's accuracy.
 
 ----------------------
-### Feature Extraction
+## Feature Extraction
 
 There are several ways for extracting features from raw EEG data. We chose the following (and plan to further implement a wavelet transfrom fro feature extraction)
 
