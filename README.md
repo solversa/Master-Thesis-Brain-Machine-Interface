@@ -21,7 +21,7 @@ I presented my results on the 22.05.17. The slides can be seen in the folder 'Re
 We implemented a spiking neural network (SNN) with a Spike-Time-Dependent Plasticity  (STDP) learning algorithm to classify a binary version of the iris data set. 
 Since the Iris data set is proven to be easy to classify we can check if our implementation of the SNN and STDP works.
 
-=> Results: We manage to achieve ~100% classification rate on the iris data set!
+=> ***Results***: We manage to achieve ~100% classification rate on the iris data set!
 
 ### Classifying EEG data with the SNN
 Since we showed our network is able to learn (on the iris data set) and STDP works we tried using it to classify imaginary movements from EEG data. For that we use the feature matrices created from the raw EEG data.
