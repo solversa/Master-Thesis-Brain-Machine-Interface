@@ -30,14 +30,14 @@ Since we showed our network is able to learn (on the iris data set) and STDP wor
 
 => Results: Our highest reached average accuracy is ~68% (over 100 Training and test cycles with the following parameters:
 - Network Parameter:
-epochs = 1 (n_training = 4)
-trial_num = 90 (training with full training set, test with remaining 12 samples)
-rand (network randomness) = on
+epochs=1 (n_training = 4),
+trial_num=90 (training with full training set, test with remaining 12 samples),
+rand (network randomness)=on
 - Neuron Parameter:
-tau_pl = 5. 
-stdp_w_max = 0.4
-stdp_w_min = 0.0
-stdp_A_pl = 0.02
+tau_pl=5.,
+stdp_w_max=0.4,
+stdp_w_min=0.0,
+stdp_A_pl=0.02
 
 To further improve the network's accuracy the following approaches are (or will be tested):
 - Homeostasis:	a system's self regularization to keep some of it's property in balance. In this case to converge to a stable output.
