@@ -17,8 +17,8 @@ I presented my results on the 22.05.17. The slides can be seen in the folder 'Re
 --------------------------
 ### Spiking Neural Network
 
-####learning the Iris data set
-We implement a spiking neural network (SNN) with a Spike-Time-Dependent Plasticity  (STDP) learning algorithm to classify a binary version of the iris data set. 
+#### Iris data set
+We implemented a spiking neural network (SNN) with a Spike-Time-Dependent Plasticity  (STDP) learning algorithm to classify a binary version of the iris data set. 
 Since the Iris data set is proven to be easy to classify we can check if our implementation of the SNN and STDP works.
 
 => Results: We manage to achieve ~100% classification rate on the iris data set!
