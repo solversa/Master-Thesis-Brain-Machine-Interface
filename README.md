@@ -14,6 +14,7 @@ The model in this work is solely trained and used on the SpiNNaker neuromorphic 
 ### UPDATES:
 I presented my results on the 22.05.17. The slides can be seen in the folder 'Report_Midterm'
 
+--------------------------
 ### Spiking Neural Network
 --------------------------
 
@@ -44,7 +45,7 @@ Results: We could not increase the accuracy constantly with this method and alwa
 - Time Coding
 Until now we use population coding to create spikes from the calculated feature values. In the next weeks we want to implement time coding (and a combination of population and time coding) to hopefully increase the network's accuracy.
 
-
+----------------------
 ### Feature Extraction
 ----------------------
 
