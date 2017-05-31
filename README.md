@@ -72,7 +72,7 @@ Bootstrap-based method to calculate to show a time-frequency map with signnifica
 --------------------------
 ## Further Approaches 
 * #### CROSS-TRIAL ENCODING: 
-Instead of trying to simply recon- struct the input trial, the CAE now had to reconstruct a different trial belonging to the same class.9 This strategy can be considered as a special case of the generalized framework for auto-encoders proposed by Wang et al. (2014).10 Given nC trials for a class C , n2C or nC (nC − 1) pairs of input and target trials can be formed depending on whether pairs with identical trials are included. This increases the number of training examples by a factor depending on the partitioning of the dataset with respect to the different classes. As for the basic auto-encoding scheme, the training objective is to minimize a reconstruction error. In this sense, it is unsupervised training but the trials are paired for training using knowledge about their class labels. We found that using the distance based on the dot product worked best as reconstruction error.
+Instead of trying to simply reconstruct the input trial, the CAE now had to reconstruct a different trial belonging to the same class.9 This strategy can be considered as a special case of the generalized framework for auto-encoders proposed by Wang et al. (2014).10 Given nC trials for a class C , n2C or nC (nC − 1) pairs of input and target trials can be formed depending on whether pairs with identical trials are included. This increases the number of training examples by a factor depending on the partitioning of the dataset with respect to the different classes. As for the basic auto-encoding scheme, the training objective is to minimize a reconstruction error. In this sense, it is unsupervised training but the trials are paired for training using knowledge about their class labels. We found that using the distance based on the dot product worked best as reconstruction error.
 <br />
 <br />
 [Source: Sebastian Stober, Avital Sternin, Adrian M. Owen & Jessica A. Grahn (2016),
@@ -83,5 +83,26 @@ DEEP FEATURE LEARNING FOR EEG RECORDINGS, https://arxiv.org/pdf/1511.04306.pdf]
 As soon as the new G-Tech amplifier for recording EEG signals is available in our lab we will record and work on our own data sets.
 Feature matrices are created from recording session session that typically contain 120 trials:
 ![alt text](https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/readme_img/eeg_recording_trial.png)
+
+
+--------------------------
+## Outline of Thesis
+
+* ### Introduction
+	- Use of BCIs
+	- BCI Basics
+
+* ### Thesis Statement
+	- The use of Spiking Neural Networks for the decoding of EEG signals could potentially improve the classification accuracies.
+
+* ### Approach
+	- Use already existing Spiking Neural Network classifier that is abstracted from the insect Olfactory system.
+	- Modify the network to use STDP for learning in it's last layer of weights
+	  (prove that STDP is generally working by successfully classifying Iris dataset)
+	- Modify network to classify features created from EEG signals
+
+* ### Conclusion
+	- EEG is f****** hard to classify
+
 
 
