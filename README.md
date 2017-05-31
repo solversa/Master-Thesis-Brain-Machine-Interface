@@ -102,6 +102,7 @@ Feature matrices are created from recording session session that typically conta
 	- Modify the network to classify features created from EEG signals
 	- Try different methods for feature extraction: Power of Subbands, ERD/ERS, Wavelet-Transform
 	- Parameter tuning of the network for the different feature matrices
+	- Compare classification accuracies of statistical machine learning algorithms with our spiking neural network approach
 
 * ### Conclusion
 	- EEG is f****** hard to classify
