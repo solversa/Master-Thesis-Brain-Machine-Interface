@@ -97,9 +97,9 @@ Feature matrices are created from recording session session that typically conta
 
 * ### Approach
 	- Using already existing Spiking Neural Network architecture as a classifier that is abstracted from the insect Olfactory system.
-	- Modify the network to use STDP for learning in it's last layer of weights
+	- Extend the network to use STDP for learning in it's last layer of weights
 	  (prove that STDP is generally working by successfully classifying Iris dataset)
-	- Modify network to classify features created from EEG signals
+	- Modify the network to classify features created from EEG signals
 
 * ### Conclusion
 	- EEG is f****** hard to classify
