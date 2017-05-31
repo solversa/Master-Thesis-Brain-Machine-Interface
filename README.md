@@ -93,7 +93,7 @@ Feature matrices are created from recording session session that typically conta
 	- BCI Basics
 
 * ### Thesis Statement
-	- The use of Spiking Neural Networks for the decoding of EEG signals could potentially improve the classification accuracies.
+	- The use of Spiking Neural Networks for the decoding of EEG signals could potentially greatly improve the classification accuracies.
 
 * ### Approach
 	- Use already existing Spiking Neural Network classifier that is abstracted from the insect Olfactory system.
