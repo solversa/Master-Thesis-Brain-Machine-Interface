@@ -63,10 +63,11 @@ ERD and ERS are brain oscillatory acitivity in diverse frequency bands. With thr
 ![alt text](https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/readme_img/feat_extract_ersd.png)
 
 ### ERD/ERS quantification (Alternative method for computation of ERD and ERS)
-[Source: Meng J, Zhang S, Bekyo A, Olsoe J, Baxter B, He B (2016) Noninvasive electroencephalogram based control of a robotic arm for reach and grasp tasks. Scientific Reports 6: 38565. http://dx.doi.org/10.1038/srep38565]
-<br />
-<br />
+
 Bootstrap-based method to calculate to show a time-frequency map with signnificant changes of ERD or ERS for specific electrodes. In
+<br />
+<br />
+[Source: Meng J, Zhang S, Bekyo A, Olsoe J, Baxter B, He B (2016) Noninvasive electroencephalogram based control of a robotic arm for reach and grasp tasks. Scientific Reports 6: 38565. http://dx.doi.org/10.1038/srep38565]
 
 --------------------------
 ## Further Approaches 
