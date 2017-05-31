@@ -65,8 +65,17 @@ ERD and ERS are brain oscillatory acitivity in diverse frequency bands. With thr
 ### ERD/ERS quantification (Alternative method for computation of ERD and ERS)
 [Source: Meng J, Zhang S, Bekyo A, Olsoe J, Baxter B, He B (2016) Noninvasive electroencephalogram based control of a robotic arm for reach and grasp tasks. Scientific Reports 6: 38565. http://dx.doi.org/10.1038/srep38565]
 <br />
+<br />
 Bootstrap-based method to calculate to show a time-frequency map with signnificant changes of ERD or ERS for specific electrodes. In
 
+--------------------------
+## Further Approaches 
+* #### CROSS-TRIAL ENCODING: 
+Instead of trying to simply recon- struct the input trial, the CAE now had to reconstruct a different trial belonging to the same class.9 This strategy can be considered as a special case of the generalized framework for auto-encoders proposed by Wang et al. (2014).10 Given nC trials for a class C , n2C or nC (nC − 1) pairs of input and target trials can be formed depending on whether pairs with identical trials are included. This increases the number of training examples by a factor depending on the partitioning of the dataset with respect to the different classes. As for the basic auto-encoding scheme, the training objective is to minimize a reconstruction error. In this sense, it is unsupervised training but the trials are paired for training using knowledge about their class labels. We found that using the distance based on the dot product worked best as reconstruction error.
+<br />
+<br />
+[Source: Sebastian Stober, Avital Sternin, Adrian M. Owen & Jessica A. Grahn (2016),
+DEEP FEATURE LEARNING FOR EEG RECORDINGS, https://arxiv.org/pdf/1511.04306.pdf]
 
 --------------------------
 ## Data Acquisition 
