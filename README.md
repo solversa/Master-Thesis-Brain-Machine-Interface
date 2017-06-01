@@ -96,8 +96,8 @@ Feature matrices are created from recording session session that typically conta
 	- The use of Spiking Neural Networks for the decoding of EEG signals could potentially greatly improve the classification accuracies.
 
 * ### Approach
-	- Using already existing Spiking Neural Network architecture as a classifier that is abstracted from the insect Olfactory system.
-	- Extend the network to use STDP for learning in it's last layer of weights
+	- Using already existing Spiking Neural Network architecture that is abstracted from the insect Olfactory system as a classifier .
+	- Extend the network to use STDP for learning for it's last layer of weights
 	  (prove that STDP is generally working by successfully classifying Iris dataset)
 	- Modify the network to classify features created from EEG signals
 	- Try different methods for feature extraction: Power of Subbands, ERD/ERS, Wavelet-Transform
