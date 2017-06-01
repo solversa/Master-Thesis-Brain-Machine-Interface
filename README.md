@@ -72,7 +72,9 @@ Bootstrap-based method to calculate to show a time-frequency map with signnifica
 --------------------------
 ## Further Approaches 
 * #### Preprocessing RAW EEG:
-We standardize the EEG signals for electrode i by substracting, for each time sample (t), the mean (V_i_mean) of the signal and dividing the result by the standard deviation (SD_vi): EV_i(t) = (V_i[t] - V_i_mean) / SD_vi
+We standardize the EEG signals for electrode i by substracting, for each time sample (t), the mean (V_i_mean) of the signal and dividing the result by the standard deviation (SD_vi): 
+<br />
+EV_i(t) = (V_i[t] - V_i_mean) / SD_vi
 
 * #### CROSS-TRIAL ENCODING: 
 Given n_C trials for a class C , n_2C or n_C*(n_C−1) pairs of input and target trials can be formed depending on whether pairs with identical trials are included. This increases the number of training examples by a factor depending on the partitioning of the dataset with respect to the different classes.
