@@ -71,8 +71,10 @@ Bootstrap-based method to calculate to show a time-frequency map with signnifica
 
 --------------------------
 ## Further Approaches 
+* #### Preprocessing RAW EEG signals for electrode i we standardize by substracting , for each time sample (t), the mean (V_i_mean) of the signal and dividing the result by the standard deviation (SD_vi): EV_i(t) = (V_i[t] - V_i_mean) / SD_vi
+
 * #### CROSS-TRIAL ENCODING: 
-Instead of trying to simply reconstruct the input trial, the CAE now had to reconstruct a different trial belonging to the same class.9 This strategy can be considered as a special case of the generalized framework for auto-encoders proposed by Wang et al. (2014).10 Given nC trials for a class C , n2C or nC (nC − 1) pairs of input and target trials can be formed depending on whether pairs with identical trials are included. This increases the number of training examples by a factor depending on the partitioning of the dataset with respect to the different classes. As for the basic auto-encoding scheme, the training objective is to minimize a reconstruction error. In this sense, it is unsupervised training but the trials are paired for training using knowledge about their class labels. We found that using the distance based on the dot product worked best as reconstruction error.
+Given n_C trials for a class C , n_2C or n_C*(n_C−1) pairs of input and target trials can be formed depending on whether pairs with identical trials are included. This increases the number of training examples by a factor depending on the partitioning of the dataset with respect to the different classes.
 <br />
 <br />
 [Source: Sebastian Stober, Avital Sternin, Adrian M. Owen & Jessica A. Grahn (2016),
