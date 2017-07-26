@@ -17,8 +17,8 @@ import scipy.io as sio
 import os
 
 def train_snn(### Settings
-              data_dir        = "data/X_0_erp_train_90.npy",
-              cls_dir         = "data/y_0_erp_train_90.npy",
+              data_dir        = "data/X_train_zied.npy",
+              cls_dir         = "data/y_train_zied.npy",
               data            = "load",    # pass data as argument
               cls             = "load",    # pass labels as argument
               save            = True,    # True to save all parameters of the network
@@ -30,13 +30,15 @@ def train_snn(### Settings
               n_training      = 2,  # How many times the samples will be iterated
               ts              = 1., # Timestep of Spinnaker (ms)
               trial_num       = 10, # How many samples (trials) from data used
+              # Network
+              n_feature       = 80, # Number of features (= 4 features * 20 neurons)
               # Weights
               wei_src_enc     = .2,    # From Source Array at input to Encoding Layer(Exc)
               wei_enc_filt    = .6,    # From Encoding Layer to Filtering Layer Exc neurons (Exc)
               wei_filt_inh    = 0.03,  # From Filtering Layer Inh neurons to Exc neurons (Inh)
               wei_init_stdp   = .0,    # From Filtering Layer Exc neurons to Output Layer (Exc)
               wei_cls_exc     = 0.9,   # From Output Layer Exc neurons to Inh neurons (Exc)
-              wei_cls_inh     = 0.1,#,10   # From Output Layer Inh neurons to Exc neurons (Inh) 
+              wei_cls_inh     = 50,#0.1,#,10   # From Output Layer Inh neurons to Exc neurons (Inh) 
               wei_source_outp = 10.,   # From Source Array at output to Output Layer Exc neurons (Exc)
               wei_noise_poi   = 0.02,
               # Delays
@@ -52,7 +54,7 @@ def train_snn(### Settings
               tau_pl         = 5.,        
               stdp_w_max     = 0.4,           # default 0.4
               stdp_w_min     = 0.0,           # default 0.0
-              stdp_A_pl      = 0.02,# 0.01,          # default 0.01 (below 0.01 weights don't change)
+              stdp_A_pl      = 2,#0.02,# 0.01,          # default 0.01 (below 0.01 weights don't change)
                                 # => minus in order to get symmetric curve
               # Data Extraction
               scale_data     = 2.): # Scale features into [0-scale_data] range
@@ -60,10 +62,11 @@ def train_snn(### Settings
     
     # BUG fix:
     # n_feature is somehow a tuple
-    try:
-        trial_num = trial_num[0]
-    except Exception as e:
-        pass
+#    try:
+#        trial_num = trial_num[0]
+#    except Exception as e:
+#        print("\n\n\n EXCEPTION TRIGGERED !!!! \n\n\n")
+#        pass
 
     ############################################################################
     ## Function Definitions
@@ -74,7 +77,7 @@ def train_snn(### Settings
 
     def calc_pop_code(feature, rng1, rng2, num):
         interval=np.float(rng2-rng1)/num
-        means=np.arange(rng1+interval,rng2+interval,interval)
+        means=np.arange(rng1+interval, rng2+interval, interval)
         pop_code=[gaussian(feature,mu,0.025) for mu in means]
         return pop_code
         
@@ -141,13 +144,12 @@ def train_snn(### Settings
         data, cls = rand_sample_of_train_set(trial_num)
     # load all features of training set
     else:    # load data if its not in passed as fuct argument
-        if data == "load":
+        if data == "load" and cls == "load":
             data = np.load(data_dir)
-        if cls == "load":
             cls = np.load(cls_dir)
 
     # Simulation Parameters
-    #trial_num = len(cls) # How many samples (trials) from data will be presented 
+    trial_num = len(cls) # How many samples (trials) from data will be presented 
     #n_training      = 1  # How many times the samples will be iterated
     n_trials        = n_training * trial_num # Total trials
     time_int_trials = 200. # (ms) Time to present each trial data 
@@ -159,9 +161,9 @@ def train_snn(### Settings
 
 
     ## Neuron Numbers
-    n_feature = 80   # Number of features (= 4 features * 20 neurons)
+    #n_feature = 80   # Number of features (= 4 features * 20 neurons)
                      #           => 20 neuros: resolution of encoding
-    n_pop     = 4    # Number of neurons in one population
+    n_pop     = data.shape[1] #4    # Number of neurons in one population (X dim)
     n_cl      = 2    # Number of classes at the output
 
     ## Connection Parameters

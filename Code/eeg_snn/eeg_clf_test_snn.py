@@ -14,11 +14,11 @@ import time
 import scipy.io as sio
 
 
-def test_snn(randomness=False,
-             data_dir        = "data/X_0_erp_test_90.npy",
-             cls_dir         = "data/y_0_erp_test_90.npy",
-             data            = False,  # pass data as argument
-             cls             = False): # pass labels as argument
+def test_snn(randomness      = False,
+             data_dir        = "data/X_test_zied.npy",
+             cls_dir         = "data/y_test_zied.npy",
+             data            = "load",  # pass data as argument
+             cls             = "load"): # pass labels as argument
     ###############################################################################
     ## Function Definitions
     ###############################################################################  
@@ -71,8 +71,9 @@ def test_snn(randomness=False,
     parameters = np.load("output_files/parameters1.npy")
     parameters = parameters.item()
     # Load test data
-    data = np.load(data_dir)
-    cls = np.load(cls_dir)
+    if data == "load" and cls == "load":
+        data = np.load(data_dir)
+        cls = np.load(cls_dir)
     # Simulation Parameters
 
     trial_num       = parameters["trial_num"] # How many samples (trials) from data will be presented 
