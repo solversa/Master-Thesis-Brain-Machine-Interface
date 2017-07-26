@@ -13,12 +13,6 @@ Aiming to find EEG signal components that are stable across imagery movements of
 
 --------------------------
 
-Architecture of the olfactory based spiking neural network:
-<img src="https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/readme_img/snn_architecture.png" width="400">
-
-
---------------------------
-
 ## Contents
 1. Introduction
 
@@ -63,6 +57,12 @@ Architecture of the olfactory based spiking neural network:
 
 Link to the full text thesis:
 [THESIS](https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/Report_Final/Thesis.pdf)
+
+
+--------------------------
+
+Architecture of the olfactory based spiking neural network:
+<img src="https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/readme_img/snn_architecture.png" width="400">
 
 
 
