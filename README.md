@@ -4,7 +4,7 @@ Master's Thesis in the field of neuromorphic information processing for brain-ma
 ## Task: Decoding of 3D Imaginary Reach and Grasp Movements from Non-invasive EEG Signals using Spiking Neural Networks on SpiNNaker Neuromorphic Hardware
 
 --------------------------
-### Abstract
+## Abstract
 
 Non-invasive, Electroencephalography (EEG) based brain-computer interfaces (BCIs) on motor imagery movements translate the subject’s motor intention into control signals through classifying the EEG patterns caused by di↵erent imagination tasks, e.g. hand movements. This type of BCI has been widely studied and is already used as an alternate mode of communication and environmental control for the disabled, such as patients su↵ering from amyotrophic lateral sclerosis, brainstem stroke and spinal cord injury. Together with recent advancements in neuromorphic computing, which allow real-time, low power implementations of large scale spiking models for data processing, BCI applications could profit from this symbiosis.
 Inspired from the architecture of the insect’s olfactory system, we further advance and implement a spiking neural network model (figure below) to decode and predict imaginary movements from EEG signals. The network runs on SpiNNaker, a neuromorphic hardware platform containing 4 chips with 64 cores. To improve the network’s performance a reward based Spike-Time Dependent Plasticity (STDP) learning al- gorithm is implemented and different techniques, as Homeostasis and batch-learning for training the network are tested.
@@ -19,7 +19,7 @@ Architecture of the olfactory based spiking neural network:
 
 --------------------------
 
-### Contents
+## Contents
 1. Introduction
 
 2. Basics
