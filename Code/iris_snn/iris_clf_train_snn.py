@@ -15,8 +15,12 @@ import pandas as pd
 import pylab
 import scipy.io as sio
 import os
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import normalize
 
 def train_snn(### Settings
+              data            = "load",
+              cls             = "load",
               save            = True,    # True to save all parameters of the network
               randomness      = True,
               reverse_src_del = False,
@@ -27,6 +31,7 @@ def train_snn(### Settings
               ts              = 1., # Timestep of Spinnaker (ms)
               trial_num       = 10, # Number of features (= 4 features * 20 neurons)
                                 #              => 20 neuros: resolution of encoding
+              n_feature       = 80,
               # Weights
               wei_src_enc     = .2,    # From Source Array at input to Encoding Layer(Exc)
               wei_enc_filt    = .6,    # From Encoding Layer to Filtering Layer Exc neurons (Exc)
@@ -119,8 +124,30 @@ def train_snn(### Settings
         idx = np.random.randint(len(X), size=n)
         return X[idx], y[idx]
         
-        
+    def PCA_dim_red(X, var_desired):
+        """
+        Dimensionality reduction using PCA
+        X:            matrix (2d np.array)
+        var_desired:  desired preserved variance
 
+        Returns X with reduced dimesnions
+        """
+        # PCA
+        pca = PCA(n_components=X.shape[1]-1)
+        pca.fit(X)
+        print('pca.explained_variance_ratio_:\n',pca.explained_variance_ratio_)    
+        var_sum = pca.explained_variance_ratio_.sum()
+        var = 0
+        for n, v in enumerate(pca.explained_variance_ratio_):
+            var += v
+            if var / var_sum >= var_desired:
+                X_reduced = PCA(n_components=n+1).fit_transform(X)
+                print("Reached Variance: {:1.3f} at {}-Dimensions. New shape: {}"
+                      .format(var/var_sum, n+1, X_reduced.shape))
+                return X_reduced
+
+
+        
     ############################################################################
     ## Parameters
     ############################################################################
@@ -130,11 +157,19 @@ def train_snn(### Settings
         data, cls = rand_sample_of_train_set(trial_num)
     # load all features of training set
     else:
-        data = np.load('data/X_iris_train.npy')
-        cls = np.load('data/y_iris_train.npy')
+        # Only read data if not given as argument
+        if data == "load" and cls == "load":
+            #data = np.load('data/X_iris_train.npy')
+            #cls = np.load('data/y_iris_train.npy')
+            data = np.load('data_eeg/X_train_zied.npy')
+            cls = np.load('data_eeg/y_train_zied.npy')
+
+    if 1:
+        data = PCA_dim_red(data, var_desired=0.9)
+
 
     # Simulation Parameters
-    #trial_num = len(cls) # How many samples (trials) from data will be presented 
+    trial_num = len(cls) # How many samples (trials) from data will be presented 
     #n_training      = 1  # How many times the samples will be iterated
     n_trials        = n_training * trial_num # Total trials
     time_int_trials = 200. # (ms) Time to present each trial data 
@@ -146,7 +181,7 @@ def train_snn(### Settings
 
 
     ## Neuron Numbers
-    n_feature = 80   # Number of features (= 4 features * 20 neurons)
+    #n_feature = 80   # Number of features (= 4 features * 20 neurons)
                      #           => 20 neuros: resolution of encoding
     n_pop     = 4    # Number of neurons in one population
     n_cl      = 2    # Number of classes at the output
@@ -627,15 +662,6 @@ def train_snn(### Settings
             if os.path.isfile(fname):    # if file already exists
                 new_num =  int(fname.split('.')[0].split('_')[1]) + 1
                 fname = fname.split('_')[0] + '_' +str(new_num) + '.png'
-    #            if len(fname) == 19:
-    #                new_num =  int(fname.split('.')[0][-1]) + 1
-    #                fname = fname.split('.')[0][:-1] + str(new_num) + '.png'
-    #            elif len(fname) == 20:
-    #                new_num =  int(fname.split('.')[0][-2:]) + 1
-    #                fname = fname.split('.')[0][:-2] + str(new_num) + '.png'
-    #            else:
-    #                new_num =  int(fname.split('.')[0][-3:]) + 1
-    #                fname = fname.split('.')[0][:-3] + str(new_num) + '.png'
             else:
                 pylab.savefig(fname)
                 break

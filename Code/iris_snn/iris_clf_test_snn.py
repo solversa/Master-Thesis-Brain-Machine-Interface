@@ -12,9 +12,13 @@ import numpy as np
 import pylab
 import time
 import scipy.io as sio
+from sklearn.decomposition import PCA
 
 
-def test_snn(randomness=False):
+def test_snn(### Settings
+             data       = "load",
+             cls        = "load",
+             randomness = False):
     ###############################################################################
     ## Function Definitions
     ###############################################################################  
@@ -59,6 +63,28 @@ def test_snn(randomness=False):
         aa=[bind.get(itm, -1) for itm in a]
         return sum(np.array(aa) + 1.)
 
+    def PCA_dim_red(X, var_desired):
+        """
+        Dimensionality reduction using PCA
+        X:            matrix (2d np.array)
+        var_desired:  desired preserved variance
+
+        Returns X with reduced dimesnions
+        """
+        # PCA
+        pca = PCA(n_components=X.shape[1]-1)
+        pca.fit(X)
+        print('pca.explained_variance_ratio_:\n',pca.explained_variance_ratio_)    
+        var_sum = pca.explained_variance_ratio_.sum()
+        var = 0
+        for n, v in enumerate(pca.explained_variance_ratio_):
+            var += v
+            if var / var_sum >= var_desired:
+                X_reduced = PCA(n_components=n+1).fit_transform(X)
+                print("Reached Variance: {:1.3f} at {}-Dimensions. New shape: {}"
+                      .format(var/var_sum, n+1, X_reduced.shape))
+                return X_reduced
+
 
     ###############################################################################
     ## Parameters
@@ -67,8 +93,16 @@ def test_snn(randomness=False):
     parameters = np.load("output_files/parameters1.npy")
     parameters = parameters.item()
     # Load test data
-    data = np.load('data/X_iris_test.npy')
-    cls = np.load('data/y_iris_test.npy')
+    # Only read data if not given as argument
+    if data == "load" and cls == "load":
+        #data = np.load('data/X_iris_test.npy')
+        #cls = np.load('data/y_iris_test.npy')
+        data = np.load('data_eeg/X_test_zied.npy')
+        cls = np.load('data_eeg/y_test_zied.npy')
+
+    if 1:
+        data = PCA_dim_red(data, var_desired=0.9)
+        
     # Simulation Parameters
 
     trial_num       = parameters["trial_num"] # How many samples (trials) from data will be presented 

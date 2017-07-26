@@ -16,6 +16,8 @@ def multiply_weights():
 		print("\n\n Weights: {}\n\n".format(cl_weights[:10]))
 		np.save("output_files/stdp_weights{}.npy".format(i), cl_weights)
 
+
+# ------------------------------------------------------------------------------
 # Check number of cycles
 try:
 	n_cycles = int(sys.argv[1])
@@ -24,25 +26,26 @@ except:
 print("\n {} Cycle(s)! \n".format(n_cycles))
 
 
-# --- SIMULATION -----------------------------------------------------
+# --- SIMULATION ---------------------------------------------------------------
 
 # Simulation Parameter
 homeostasis     = False
-epochs          = 2
+binary_weights  = False
+epochs          = 1
 # Network Parameter
 randomness 		= True
 rand_data       = False
 trial_num       = 90
 reverse_src_del = False
 # STDP Parameter
-tau_pl          = 5.
+tau_pl          = 10.
 
 ### Run Train and Test Scripts n_cycles times
 rates = []
 for c in range(n_cycles):
 
 	print('Training network ... ')
-	iris_clf_train_snn.train_snn(n_training      = 1,
+	iris_clf_train_snn.train_snn(n_training      = 4,   #2
 								 use_old_weights = False,
 								 randomness      = randomness,
 							 	 tau_pl          = tau_pl,
@@ -52,6 +55,8 @@ for c in range(n_cycles):
 	for _ in range(epochs - 1):
 		if homeostasis == True:
 			multiply_weights()
+		if binary_weights == True:
+			make_binary_weights()
 		iris_clf_train_snn.train_snn(n_training      = 1,
 									 use_old_weights = True,
 									 randomness      = randomness,
