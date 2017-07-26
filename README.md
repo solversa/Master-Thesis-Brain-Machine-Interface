@@ -56,7 +56,7 @@ Aiming to find EEG signal components that are stable across imagery movements of
 
 
 Link to the full text thesis:
-
+<br />
 [THESIS](https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/Report_Final/Thesis.pdf)
 
 
