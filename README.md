@@ -24,11 +24,11 @@ Architecture of the olfactory based spiking neural network:
 
 2. Basics
 * 2.1. EEG based Brain-Computer Interfaces for Motor Imagery
-		2.1.1 Underlying Brain Processes of Motor Imagery
-		2.1.2 EEG Data Acquisition of Motor Imagery
+	*	2.1.1 Underlying Brain Processes of Motor Imagery
+	*	2.1.2 EEG Data Acquisition of Motor Imagery
 * 2.2. NeuromorphicHardwareandAlgorithms
-		2.2.1. NeuromorphicComputing
-		2.2.2. NeuromorphicHardware
+	*	2.2.1. NeuromorphicComputing
+	*	2.2.2. NeuromorphicHardware
 
 3. Overview on the State of the Art of EEG based Brain-Machine Interfaces
 3.1 Review: EEG based Brain-Computer Interfaces
