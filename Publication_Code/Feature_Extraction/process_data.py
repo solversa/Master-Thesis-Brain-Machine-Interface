@@ -118,9 +118,9 @@ def read_data(subject_str):
         mat2 = scipy.io.loadmat(folder_dir + file_dir2) 
         mat3 = scipy.io.loadmat(folder_dir + file_dir3)
         freq_s = mat1['Fs'].flatten()[0]
-        raw_data1 = mat1['X'][:,:]
-        raw_data2 = mat2['X'][:,:]
-        raw_data3 = mat3['X'][:,:]
+        raw_data1 = mat1['X'][:,1:]
+        raw_data2 = mat2['X'][:,1:]
+        raw_data3 = mat3['X'][:,1:]
         labels1 = mat1['Y'].flatten() - 1
         labels2 = mat2['Y'].flatten() - 1
         labels3 = mat3['Y'].flatten() - 1
@@ -193,7 +193,7 @@ def read_data(subject_str):
         # Interpolate NaN values
         #raw_data = pd.DataFrame(raw_data).interpolate().values
 
-        raw_data = data_bt
+        raw_data = data_bt[:,:3]
         trials = trials_bt
         labels = labels_bt
  
@@ -232,28 +232,74 @@ def extract_trials(raw_data, trials, labels, trial_total, fs):
     return class1_data, class2_data
 
 
-
 def bandpass_filter(data, lowcut, highcut, fs, order=6):
+    """
+    data:   (n_samples, n_channels)
+    """
     nyq = 0.5 * fs
     low = lowcut / nyq
     high = highcut / nyq
     b, a = butter(order, [low, high], btype='band')
-    y = lfilter(b, a, data)
-    return y
+    try:    
+        raw_filt = np.zeros(data.shape)
+        for i in range(data.shape[1]):    # iterate over number of channels
+            raw_filt[:,i] = lfilter(b, a, data[:,i]) 
+        return raw_filt
+    except:    # if 1D array
+        return lfilter(b, a, data)
+        
+
+def bandstop_filter(data, w0, Q):
+    """
+    data:   (n_samples, n_channels)
+    """
+    b, a = iirnotch(w0, Q)
+    try:
+        raw_filt = np.zeros(data.shape)
+        for i in range(data.shape[1]):    # iterate over number of channels
+            raw_filt[:,i] = lfilter(b, a, data[:,i])
+        return raw_filt
+    except: # if 1D array
+        return lfilter(b, a, data)
+     
 
 def normalize_data(data, type="norm"):
     if type == "norm":
         return normalize(data)
     elif type == "std":
         return StandardScaler().fit_transform(data) 
+    elif type == "nan":
+        mean = np.nanmean(data)
+        std = np.nanstd(data)
+        return (data - mean) / std
 
 
+def subBP_features(raw_data, trials, labels, fs):
+    """
+    Read:
+    - raw_data:   (n_samples, n_channels)
+    - trials:     (n_trials, )
+    - labels:     (n_trials, )
+    Return:  
+    - X:          (n_trials, n_features)
+    - Y:          (n_trials)
+    """
+
+    ### Filter data in sub-bands
+    sub_bands = np.array([np.arange(7,12), np.arange(8,13)]).T
+    # array([[ 7,  8],
+    #        [ 8,  9],
+    #        ...
+    #        [23, 24],
+    #        [24, 25]])
+
+    filt_subbands = []
+    for low, high in sub_bands:
+        print('Filter from', low, 'to', high)
+        filt_subbands.append(bandpass_filter(data, low, high, fs))
 
 
-
-
-
-
+    ### Extract Features
 
 
 
