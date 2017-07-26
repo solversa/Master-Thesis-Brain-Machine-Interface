@@ -1,4 +1,4 @@
-Master Thesis: Neuromorphic Information Processing for Brain Machine Interfaces
+Master's Thesis in the field of neuromorphic information processing for brain-machine interfaces
 ======================================
 
 ## Task: Decoding of 3D Imaginary Reach and Grasp Movements from Non-invasive EEG Signals using Spiking Neural Networks on SpiNNaker Neuromorphic Hardware
