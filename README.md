@@ -30,16 +30,16 @@ Architecture of the olfactory based spiking neural network:
 		2.2.1. NeuromorphicComputing
 		2.2.2. NeuromorphicHardware
 
-3 Overview on the State of the Art of EEG based Brain-Machine Interfaces
+3. Overview on the State of the Art of EEG based Brain-Machine Interfaces
 3.1 Review: EEG based Brain-Computer Interfaces
 3.2 DecodingMethodsofMotorImageryfromEEGData
 3.3 Spiking Neural Network based on the Insect’s Olfactory System
 
-4 Solution Design
+4. Solution Design
 4.1 Design
 4.2 ExperimentalData
 
-5 Implementation
+5. Implementation
 5.1 DataPreprocessing
 5.2 FeatureExtractionMethods
 5.2.1 Event Related Desynchronization and Synchronization 
@@ -52,13 +52,10 @@ Architecture of the olfactory based spiking neural network:
 5.3.3 NetworkEvaluation
 5.3.4 Results:SpikingNeuralNetwork
 
-6 Discussion
+6. Discussion
 
-7 Conclusion
+7. Conclusion
 
-List of Figures
-
-Bibliography
 
 
 --------------------------
