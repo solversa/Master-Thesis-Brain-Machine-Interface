@@ -21,7 +21,10 @@ Architecture of the olfactory based spiking neural network:
 --------------------------
 
 Link to the full text thesis:
-![alt text](https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/Report_Final/Thesis.pdf)
+
+
+[THESIS](https://github.com/LeRyc/Master-Thesis-Brain-Machine-Interface/blob/master/Report_Final/Thesis.pdf)
+
 
 
 
